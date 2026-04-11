@@ -1,0 +1,245 @@
+root = true
+
+# ============================================
+# All Files
+# ============================================
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# ============================================
+# Code Files
+# ============================================
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+tab_width = 4
+
+# ============================================
+# XML/Config Files
+# ============================================
+[*.{xml,config,props,targets,nuspec,resx,ruleset}]
+indent_size = 2
+
+# ============================================
+# JSON Files
+# ============================================
+[*.json]
+indent_size = 2
+
+# ============================================
+# YAML Files
+# ============================================
+[*.{yaml,yml}]
+indent_size = 2
+quote_type = single
+
+# ============================================
+# GitHub Actions YAML
+# ============================================
+[.github/workflows/*.yml]
+indent_size = 2
+
+# ============================================
+# Markdown Files
+# ============================================
+[*.md]
+trim_trailing_whitespace = false
+
+# ============================================
+# C# Code Style Rules
+# ============================================
+[*.cs]
+
+# ───────────────────────────────────────────
+# Language Preferences
+# ───────────────────────────────────────────
+
+# Prefer explicit types over 'var'
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = true:silent
+csharp_style_var_elsewhere = false:suggestion
+
+# Expression-bodied members (suggestions only)
+csharp_style_expression_bodied_methods = when_on_single_line:silent
+csharp_style_expression_bodied_constructors = false:silent
+csharp_style_expression_bodied_properties = when_on_single_line:silent
+csharp_style_expression_bodied_accessors = when_on_single_line:silent
+
+# Pattern matching (suggestions only)
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+csharp_style_prefer_switch_expression = true:suggestion
+
+# Modifier preferences
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:silent
+
+# Code block preferences
+csharp_prefer_braces = true:silent
+csharp_prefer_simple_using_statement = true:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_style_prefer_primary_constructors = true:silent
+
+# 'using' directive preferences
+csharp_using_directive_placement = outside_namespace:suggestion
+
+# ───────────────────────────────────────────
+# C# 14 Specific Features
+# ───────────────────────────────────────────
+
+# Extension members - prefer extension blocks over individual extension methods
+csharp_style_prefer_extension_blocks = true:suggestion
+
+# Field keyword - prefer using 'field' in property accessors for backing field access
+csharp_style_prefer_field_keyword = true:suggestion
+
+# Null-conditional assignment
+csharp_style_prefer_null_conditional_assignment = true:suggestion
+
+# Lambda parameters with modifiers - allow parameter modifiers without explicit types
+csharp_style_prefer_inferred_lambda_parameter_types = true:suggestion
+
+# Unbound generic types with nameof - prefer nameof(List<>) over nameof(List<int>)
+csharp_style_prefer_unbound_generic_nameof = true:suggestion
+
+# Implicit span conversions
+csharp_style_prefer_implicit_span_conversions = true:suggestion
+
+# Partial constructors and events
+csharp_style_prefer_partial_constructors = true:suggestion
+
+# ───────────────────────────────────────────
+# Formatting Rules
+# ───────────────────────────────────────────
+
+# New line preferences
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+
+# Indentation preferences
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = no_change
+
+# Space preferences
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_around_binary_operators = before_and_after
+
+# ───────────────────────────────────────────
+# .NET Code Quality Rules
+# ───────────────────────────────────────────
+
+# this. and Me. preferences
+dotnet_style_qualification_for_field = false:silent
+dotnet_style_qualification_for_property = false:silent
+dotnet_style_qualification_for_method = false:silent
+dotnet_style_qualification_for_event = false:silent
+
+# Language keywords vs BCL types preferences
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# Modifier preferences
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+dotnet_style_readonly_field = true:suggestion
+
+# Expression preferences
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+
+# Null checking preferences
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+
+# ───────────────────────────────────────────
+# Naming Conventions
+# ───────────────────────────────────────────
+
+# Async methods should end with Async
+dotnet_naming_rule.async_methods_end_in_async.severity = suggestion
+dotnet_naming_rule.async_methods_end_in_async.symbols = async_methods
+dotnet_naming_rule.async_methods_end_in_async.style = end_in_async
+
+dotnet_naming_symbols.async_methods.applicable_kinds = method
+dotnet_naming_symbols.async_methods.applicable_accessibilities = *
+dotnet_naming_symbols.async_methods.required_modifiers = async
+
+dotnet_naming_style.end_in_async.required_suffix = Async
+dotnet_naming_style.end_in_async.capitalization = pascal_case
+
+# Interfaces should start with I
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = warning
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = *
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# Private fields should start with underscore
+dotnet_naming_rule.private_fields_should_be_underscore_prefixed.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_underscore_prefixed.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_underscore_prefixed.style = underscore_prefix
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+
+# ───────────────────────────────────────────
+# Code Analysis Rules
+# ───────────────────────────────────────────
+
+# CRITICAL SECURITY RULES (errors only)
+dotnet_diagnostic.CA5394.severity = error # Do not use insecure randomness
+dotnet_diagnostic.CA5397.severity = error # Do not use deprecated SslProtocols values
+dotnet_diagnostic.CA2007.severity = none  # Do not directly await a Task (disabled for Aspire/Azure)
+
+# DISABLE NOISY RULES
+dotnet_diagnostic.CA1062.severity = none # Validate public method parameters (too noisy)
+dotnet_diagnostic.CA1515.severity = none # Types should be internal (too restrictive)
+dotnet_diagnostic.CA1716.severity = none # Identifiers should not match keywords
+dotnet_diagnostic.CA1724.severity = none # Type names conflict with namespaces
+
+# PERFORMANCE (suggestions only)
+dotnet_diagnostic.CA1822.severity = suggestion # Mark members as static
+dotnet_diagnostic.CA1826.severity = suggestion # Use property instead of Linq
+dotnet_diagnostic.CA1827.severity = suggestion # Do not use Count when Any can be used
+dotnet_diagnostic.CA1829.severity = suggestion # Use Length/Count property
+
+# DESIGN (suggestions only)
+dotnet_diagnostic.CA1031.severity = none # Do not catch general exception types (we use Result Pattern)
+dotnet_diagnostic.CA1051.severity = suggestion # Do not declare visible instance fields
+
+# NAMING (disabled - too noisy)
+dotnet_diagnostic.CA1707.severity = none # Identifiers should not contain underscores
+
+# IDE ANALYZERS
+dotnet_diagnostic.IDE0005.severity = warning # Remove unnecessary using directives
+dotnet_diagnostic.IDE0079.severity = none # Remove unnecessary suppression (disabled)
+
+# XML DOCUMENTATION (disabled - too noisy)
+dotnet_diagnostic.CS1591.severity = none # Missing XML comment
+dotnet_diagnostic.CS1574.severity = none # XML comment has cref that could not be resolved
+dotnet_diagnostic.CS1584.severity = none # XML comment has syntactically incorrect cref
+dotnet_diagnostic.CS1658.severity = none # Warning is overriding an error
+
+# NULLABLE REFERENCE TYPES (suggestions only)
+dotnet_diagnostic.CS8618.severity = suggestion # Non-nullable field must contain non-null value
+dotnet_diagnostic.CS8604.severity = suggestion # Possible null reference argument
+
+# SONARCLOUD (disabled here - will be enforced in SonarCloud itself)
+dotnet_diagnostic.S3776.severity = none # Cognitive Complexity
+dotnet_diagnostic.S1118.severity = none # Utility classes should not have public constructors
+dotnet_diagnostic.S1144.severity = none # Unused private types or members
