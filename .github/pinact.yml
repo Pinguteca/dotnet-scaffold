@@ -1,0 +1,17 @@
+version: 3
+files:
+  - pattern: .github/workflows/*.yml
+  - pattern: .github/workflows/*.yaml
+  - pattern: .github/actions/*/action.yml
+  - pattern: .github/actions/*/action.yaml
+
+ignore_actions:
+  # slsa-framework/slsa-github-generator doesn't support pinning version
+  # > Invalid ref: 68bad40844440577b33778c9f29077a3388838e9. Expected ref of the form refs/tags/vX.Y.Z
+  # https://github.com/slsa-framework/slsa-github-generator/issues/722
+  - name: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml
+    ref: .*
+  - name: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml
+    ref: .*
+
+separator: " # "

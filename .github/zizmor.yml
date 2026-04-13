@@ -1,0 +1,7 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "*": hash-pin
+        # SLSA generator must be pinned by tag, not hash (spec requirement)
+        "slsa-framework/slsa-github-generator/*": any

@@ -1,0 +1,47 @@
+name: GitSign commit verification
+on:
+  # Skip verification for Mend Renovate bot commits
+  push:
+    branches:
+      - "!renovate/**"
+  pull_request:
+    types: [reopened, ready_for_review, review_requested]
+    branches:
+      - "!renovate/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  gitSignVerify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    name: Verify commit
+    steps:
+#if (harden-runner)
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+          disable-telemetry: "true"
+          disable-sudo-and-containers: "true"
+#endif
+      - name: Optimize Git config for CI
+        run: |
+          # Disable compression for faster network transfer.
+          git config --global core.compression 0
+          # Turn off fsync
+          git config --global core.fsync -all
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          filter: "blob:none"
+      - uses: chainguard-dev/actions/setup-gitsign@f45211d3e8f9d2676c6b8cdd6a765435e06c819d # v1.6.13
+      - shell: bash
+        run: |
+          gitsign verify --certificate-identity-regexp="^.*@gmail.com$" --certificate-oidc-issuer="https://github.com/login/oauth"
