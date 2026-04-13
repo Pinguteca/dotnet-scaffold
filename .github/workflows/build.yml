@@ -1,0 +1,87 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+env:
+  CI: "true"
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+
+jobs:
+  build:
+    name: Build and verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+
+    steps:
+#if (harden-runner)
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+          disable-telemetry: "true"
+          disable-sudo-and-containers: "true"
+#endif
+      - name: Optimize Git config for CI
+        run: |
+          # Disable compression for faster network transfer.
+          git config --global core.compression 0
+          # Turn off fsync
+          git config --global core.fsync -all
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          filter: "blob:none"
+
+      - name: Install mise and tools
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+        with:
+          experimental: true
+
+      - name: Restore with locked-mode (verify lockfiles)
+        run: dotnet restore ScaffoldProjectName.slnx --locked-mode
+
+      - name: Verify code formatting
+        run: mise run format:check
+
+      - name: Build (Release)
+        run: dotnet build ScaffoldProjectName.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: |
+          if ls tests/*.csproj >/dev/null 2>&1 || ls test/*.csproj >/dev/null 2>&1; then
+            dotnet test ScaffoldProjectName.slnx --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+          else
+            echo "No test projects found, skipping tests"
+          fi
+
+      - name: Upload test results
+        if: always() && hashFiles('**/test-results.trx') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-results
+          path: "**/test-results.trx"
+          retention-days: 30
+
+      - name: Upload coverage
+        if: always() && hashFiles('**/coverage.cobertura.xml') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage
+          path: "**/coverage.cobertura.xml"
+          retention-days: 30
