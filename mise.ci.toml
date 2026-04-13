@@ -1,0 +1,20 @@
+[settings]
+experimental = false
+# Caching
+env_cache = true
+env_cache_ttl = "9h"
+# Tools
+install_before = "7d"
+pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and install_before setting
+lockfile = true
+locked = false
+prefer_offline = true
+disable_default_registry = true
+disable_backends = ["asdf", "vfox", "ubi"]
+
+[tasks."ci:git-config"]
+run = """
+git config --global core.compression 0
+git config --global core.fsync -all
+"""
+description = "Optimize Git config for CI (disable compression, fsync)"

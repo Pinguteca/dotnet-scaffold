@@ -1,0 +1,68 @@
+[settings]
+experimental = true
+# Caching
+env_cache = true
+env_cache_ttl = "9h"
+# Tools
+install_before = "7d"
+pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and install_before setting
+lockfile = true
+locked = false
+prefer_offline = true
+disable_default_registry = true
+disable_backends = ["asdf", "vfox", "ubi"]
+
+[tasks."aspire:deploy"]
+run = "aspire deploy"
+alias = "apd"
+
+[tasks.build]
+run = "dotnet build ScaffoldProjectName.slnx"
+alias = "b"
+description = "Build all projects"
+
+[tasks.clean]
+run = "dotnet clean ScaffoldProjectName.slnx"
+alias = "cl"
+description = "Clean build artifacts"
+
+[tasks.restore]
+run = "dotnet restore ScaffoldProjectName.slnx"
+alias = "r"
+description = "Restore NuGet packages"
+
+[tasks.format]
+run = "dotnet format ScaffoldProjectName.slnx"
+alias = "fmt"
+description = "Format code using .editorconfig rules"
+
+[tasks."format:check"]
+run = "dotnet format ScaffoldProjectName.slnx --verify-no-changes"
+alias = "fmtc"
+description = "Check code formatting without changes"
+
+[tasks.dev]
+run = "dotnet run --project src/ScaffoldProjectName.AppHost/ScaffoldProjectName.AppHost.csproj"
+alias = "d"
+description = "Start Aspire AppHost (local development)"
+
+[tasks."release:sbom"]
+run = "dotnet tool run CycloneDX ScaffoldProjectName.slnx -o out/sbom -f json"
+alias = "rsbom"
+description = "Generate SBOM in CycloneDX format"
+
+[tasks."secret:scan"]
+run = "kingfisher scan . --format json --output kingfisher-results.json"
+alias = "ss"
+description = "Scan for secrets in codebase"
+
+[tasks."secret:validate"]
+run = "kingfisher scan . --validate --validation-rps 2"
+alias = "sv"
+description = "Scan and validate live secrets for revocation"
+
+[tools]
+"dotnet:aspire.cli" = "13.2.2"
+"github:mongodb/kingfisher" = "1.95.0"
+pinact = "3.9.0"
+rtk = "0.33.1"

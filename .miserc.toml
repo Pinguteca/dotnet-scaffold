@@ -1,0 +1,3 @@
+# this means development (mise.toml) takes precedence
+# help daily development workflow
+env = ["development", "ci"]
