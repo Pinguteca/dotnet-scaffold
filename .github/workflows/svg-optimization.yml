@@ -68,7 +68,7 @@ jobs:
                 - added|modified: '**/*.svg'
       - name: Setup Gitsign for commit signing
         if: steps.svg_changes.outputs.svg == 'true'
-        uses: chainguard-dev/actions/setup-gitsign@f45211d3e8f9d2676c6b8cdd6a765435e06c819d # v1.6.13
+        uses: chainguard-dev/actions/setup-gitsign@de68b87302e6266db5fb5220246f8aa46fe94b67 # v1.6.14
       - name: Install pnpm
         if: steps.svg_changes.outputs.svg == 'true'
         uses: pnpm/action-setup@08c4be7e2e672a47d11bd04269e27e5f3e8529cb # v6.0.0
