@@ -1,0 +1,79 @@
+default_stages = ["pre-commit"]
+default_install_hook_types = [
+  "pre-commit",
+  "commit-msg",
+  "pre-push",
+  "post-checkout",
+  "post-merge"
+  ]
+fail_fast = true
+
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+  { id = "check-added-large-files" },
+  { id = "check-case-conflict" },
+  { id = "check-executables-have-shebangs" },
+  { id = "check-yaml" },
+  { id = "check-json", exclude = "\\.devcontainer/.*\\.json$|\\.vscode/.*\\.json$" },
+  { id = "check-added-large-files" },
+  { id = "end-of-file-fixer", exclude = "packages\\.lock\\.json$" },
+  { id = "fix-byte-order-marker" },
+  {
+    id = "mixed-line-ending",
+    args = ["--fix=lf"]
+  },
+  { id = "trailing-whitespace" }
+]
+
+[[repos]]
+repo = "https://github.com/mongodb/kingfisher"
+rev = "v1.95.0"
+hooks = [
+  { id = "kingfisher" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cocogitto-commit-msg",
+    name = "Cocogitto verify",
+    language = "system",
+    entry = "cog",
+    args = [
+      "verify",
+      "--file"
+    ],
+    stages = ["commit-msg"],
+    pass_filenames = true
+  },
+  {
+    id = "dotnet-restore-lockfiles",
+    name = "Verify NuGet lockfiles",
+    language = "system",
+    entry = "dotnet",
+    args = [
+        "restore",
+        "--force-evaluate"
+    ],
+    stages = ["pre-commit"],
+    files = "(?:\\.csproj|Directory\\.Packages\\.props)$",
+    pass_filenames = false
+  },
+  {
+    id = "pin-github-actions",
+    name = "Pinact update GHA",
+    language = "system",
+    entry = "pinact",
+    args = [
+        "run",
+        "-u",
+        "--min-age",
+        "7"
+    ],
+    stages = ["pre-push"],
+    pass_filenames = false
+  }
+]
