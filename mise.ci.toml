@@ -18,3 +18,23 @@ git config --global core.compression 0
 git config --global core.fsync -all
 """
 description = "Optimize Git config for CI (disable compression, fsync)"
+
+[tasks."ci:restore"]
+run = "dotnet restore ScaffoldProjectName.slnx --locked-mode"
+description = "Restore NuGet packages in locked mode (verifies lockfiles match)"
+
+[tasks."ci:build"]
+run = "dotnet build ScaffoldProjectName.slnx --configuration Release --no-restore"
+description = "Build solution in Release configuration without restoring"
+
+[tasks."ci:test"]
+run = """
+if ls tests/*.csproj >/dev/null 2>&1 || ls test/*.csproj >/dev/null 2>&1; then
+  dotnet test ScaffoldProjectName.slnx --configuration Release --no-build \
+    --logger "trx;LogFileName=test-results.trx" \
+    --collect:"XPlat Code Coverage"
+else
+  echo "No test projects found, skipping tests"
+fi
+"""
+description = "Run tests in Release with TRX logger and XPlat coverage"
