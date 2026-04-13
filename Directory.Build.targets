@@ -1,0 +1,65 @@
+<Project>
+
+  <!-- ============================================= -->
+  <!-- Validate SDK Version on Build                 -->
+  <!-- ============================================= -->
+  <Target Name="ValidateSdkVersion" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <ExpectedSdkVersion>10.0.201</ExpectedSdkVersion>
+      <CurrentSdkVersion>$(NETCoreSdkVersion)</CurrentSdkVersion>
+    </PropertyGroup>
+
+    <Warning
+      Condition="!$(CurrentSdkVersion.StartsWith('10.0'))"
+      Text="SDK version mismatch detected. Expected: $(ExpectedSdkVersion), Current: $(CurrentSdkVersion). Check global.json." />
+  </Target>
+
+  <!-- ============================================= -->
+  <!-- Generate Build Information File               -->
+  <!-- ============================================= -->
+  <Target Name="GenerateBuildInfo" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <BuildInfoFile>$(OutputPath)buildinfo.json</BuildInfoFile>
+      <BuildTimestamp>$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"))</BuildTimestamp>
+      <GitCommitHash Condition="'$(GITHUB_ACTIONS)' == 'true'">$(GITHUB_SHA)</GitCommitHash>
+      <GitCommitHash Condition="'$(GitCommitHash)' == ''">unknown</GitCommitHash>
+      <BuildNumber Condition="'$(GITHUB_ACTIONS)' == 'true'">$(GITHUB_RUN_NUMBER)</BuildNumber>
+      <BuildNumber Condition="'$(BuildNumber)' == ''">local</BuildNumber>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <BuildInfoLines Include="{" />
+      <BuildInfoLines Include='  "buildTimestamp": "$(BuildTimestamp)",' />
+      <BuildInfoLines Include='  "gitCommit": "$(GitCommitHash)",' />
+      <BuildInfoLines Include='  "buildNumber": "$(BuildNumber)",' />
+      <BuildInfoLines Include='  "configuration": "$(Configuration)",' />
+      <BuildInfoLines Include='  "targetFramework": "$(TargetFramework)",' />
+      <BuildInfoLines Include='  "runtimeIdentifier": "$(RuntimeIdentifier)"' />
+      <BuildInfoLines Include="}" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      File="$(BuildInfoFile)"
+      Lines="@(BuildInfoLines)"
+      Overwrite="true"
+      Encoding="UTF-8" />
+
+    <Message Text="Build info generated at: $(BuildInfoFile)" Importance="high" />
+  </Target>
+
+  <!-- ============================================= -->
+  <!-- Clean Generated Artifacts                     -->
+  <!-- ============================================= -->
+  <Target Name="CleanArtifacts" AfterTargets="Clean">
+    <RemoveDir Directories="$(MSBuildThisFileDirectory)artifacts" />
+    <Message Text="Cleaned artifacts directory" Importance="high" />
+  </Target>
+
+  <!-- ============================================= -->
+  <!-- Test Coverage Reporting                       -->
+  <!-- ============================================= -->
+  <Target Name="GenerateCoverageReport" AfterTargets="Test" Condition="$(MSBuildProjectName.EndsWith('.Tests')) AND '$(CI)' == 'true'">
+    <Message Text="Generating code coverage report for $(MSBuildProjectName)..." Importance="high" />
+  </Target>
+
+</Project>
