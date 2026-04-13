@@ -38,10 +38,40 @@ jobs:
           git config --global core.fsync -all
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          # Fetch full history so we can verify every commit in the PR range
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
           filter: "blob:none"
       - uses: chainguard-dev/actions/setup-gitsign@de68b87302e6266db5fb5220246f8aa46fe94b67 # v1.6.14
-      - shell: bash
+      - name: Verify signatures of every commit in the PR range
+        shell: bash
         run: |
-          gitsign verify --certificate-identity-regexp="^.*@gmail.com$" --certificate-oidc-issuer="https://github.com/login/oauth"
+          set -euo pipefail
+          # Mimic Chainguard Enforce behaviour: verify every commit in the PR,
+          # not just the tip. On push events, verify the last commit.
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            COMMITS=$(git rev-list "$BASE..$HEAD")
+          else
+            COMMITS="${{ github.sha }}"
+          fi
+
+          FAILED=0
+          for commit in $COMMITS; do
+            echo "::group::Verifying $commit"
+            if ! gitsign verify \
+                --certificate-identity-regexp="^.*@ScaffoldIdentityDomain$" \
+                --certificate-oidc-issuer="https://github.com/login/oauth" \
+                "$commit"; then
+              echo "::error::Commit $commit failed gitsign verification"
+              FAILED=$((FAILED + 1))
+            fi
+            echo "::endgroup::"
+          done
+
+          if [ "$FAILED" -gt 0 ]; then
+            echo "::error::$FAILED commit(s) failed signature verification"
+            exit 1
+          fi
