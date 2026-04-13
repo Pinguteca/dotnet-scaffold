@@ -1,0 +1,19 @@
+# Default owners for everything in the repo
+* @ScaffoldOwner
+
+# CI/CD and infrastructure
+/.github/ @ScaffoldOwner
+/.mise-tasks/ @ScaffoldOwner
+/Directory.Build.* @ScaffoldOwner
+/Directory.Packages.props @ScaffoldOwner
+/global.json @ScaffoldOwner
+/mise.toml @ScaffoldOwner
+/mise.ci.toml @ScaffoldOwner
+/jreleaser.yml @ScaffoldOwner
+/cog.toml @ScaffoldOwner
+/prek.toml @ScaffoldOwner
+
+# License and security
+/LICENSE @ScaffoldOwner
+/SECURITY.md @ScaffoldOwner
+/renovate.json @ScaffoldOwner
