@@ -1,0 +1,9 @@
+<Project>
+  <!-- Isolate file tasks from repo-level build configuration -->
+  <PropertyGroup>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <IncludeSymbols>false</IncludeSymbols>
+    <PublishRepositoryUrl>false</PublishRepositoryUrl>
+  </PropertyGroup>
+</Project>

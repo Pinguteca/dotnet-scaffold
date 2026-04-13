@@ -1,0 +1,180 @@
+# Docs: https://jreleaser.org/guide/latest
+project:
+  name: ScaffoldProjectName
+  description: ScaffoldDescription
+  longDescription: ScaffoldDescription
+  authors:
+    - ScaffoldAuthor
+#if (hasLicense)
+  license: LICENSE_SPDX_ID
+#endif
+  vendor: ScaffoldVendor
+  stereotype: WEB
+  tags:
+    - dotnet
+    - aspire
+    - api
+  links:
+    homepage: https://github.com/ScaffoldOwner/ScaffoldTemplate
+    bugTracker: https://github.com/ScaffoldOwner/ScaffoldTemplate/issues
+  snapshot:
+    label: early-access
+    fullChangelog: true
+
+#  GitHub Release ─
+release:
+  github:
+    owner: ScaffoldOwner
+    name: ScaffoldTemplate
+    tagName: "v{{projectVersion}}"
+    releaseName: "v{{projectVersion}}"
+    overwrite: false
+    draft: false
+    skipTag: true
+    branch: main
+    artifacts: true
+    files: true
+    checksums: true
+    catalogs: true
+    signatures: true
+    changelog:
+      enabled: true
+      formatted: ALWAYS
+      preset: conventional-commits
+      sort: DESC
+      hide:
+        uncategorized: true
+        contributors:
+          - "[bot]"
+          - dependabot
+
+#  Hooks
+# Build and push multi-arch container image as part of the release lifecycle.
+# Uses the existing Containerfile.release via mise task.
+hooks:
+  command:
+    before:
+      - cmd: "mise run release:container {{projectVersion}}"
+        verbose: true
+        filter:
+          includes:
+            - release
+
+#  Checksums
+checksum:
+  name: "{{projectName}}-{{projectVersion}}_checksums.txt"
+  algorithms:
+    - SHA-256
+    - SHA-512
+  individual: true
+  artifacts: true
+  files: true
+
+#  Signing (Cosign keyless via Sigstore)
+signing:
+  cosign:
+    active: RELEASE
+    version: 3.0.3
+    artifacts: true
+    checksums: true
+    files: true
+
+#  Archive Assemblers (matrix-driven) ─
+# Two blocks: TAR_GZ for linux/macOS, ZIP for Windows.
+# Each archive has its own matrix rows (no global matrix - applyDefaultMatrix omitted).
+# 'rid' maps to .NET Runtime Identifier; 'platform' is JReleaser's canonical key.
+assemble:
+  archive:
+    app-tar:
+      active: ALWAYS
+      archiveName: "{{projectName}}-{{projectVersion}}-{{matrix.rid}}"
+      formats:
+        - TAR_GZ
+      matrix:
+        rows:
+          - { rid: linux-x64, platform: linux-x86_64 }
+          - { rid: linux-arm64, platform: linux-aarch_64 }
+          - { rid: osx-x64, platform: osx-x86_64 }
+          - { rid: osx-arm64, platform: osx-aarch_64 }
+      fileSets:
+        - input: "out/publish/{{matrix.rid}}"
+          output: .
+          includes:
+            - "**/*"
+        - input: .
+          includes:
+#if (hasLicense)
+            - LICENSE
+#endif
+            - README.md
+
+    app-zip:
+      active: ALWAYS
+      archiveName: "{{projectName}}-{{projectVersion}}-{{matrix.rid}}"
+      formats:
+        - ZIP
+      matrix:
+        rows:
+          - { rid: win-x64, platform: windows-x86_64 }
+          - { rid: win-arm64, platform: windows-aarch_64 }
+      fileSets:
+        - input: "out/publish/{{matrix.rid}}"
+          output: .
+          includes:
+            - "**/*"
+        - input: .
+          includes:
+#if (hasLicense)
+            - LICENSE
+#endif
+            - README.md
+
+#  Catalogs ─
+catalog:
+  #  SBOM: CycloneDX ─
+  sbom:
+    cyclonedx:
+      active: ALWAYS
+      distributions: true
+      files: true
+      pack:
+        enabled: true
+        name: "{{projectName}}-{{projectVersion}}-sbom-cyclonedx"
+
+    #  SBOM: Syft (SPDX + CycloneDX) ─
+    syft:
+      active: ALWAYS
+      distributions: true
+      files: true
+      formats:
+        - SPDX_JSON
+        - CYCLONEDX_JSON
+      pack:
+        enabled: true
+        name: "{{projectName}}-{{projectVersion}}-sbom-spdx"
+
+  #  SLSA Subject Attestation ─
+  slsa:
+    active: ALWAYS
+    attestationName: "{{projectName}}-{{projectVersion}}"
+    artifacts: true
+    files: true
+    deployables: true
+
+  #  SWID Tags (ISO/IEC 19770-2:2015)
+  swid:
+    app:
+      active: ALWAYS
+      path: SWIDTAG
+      lang: en-US
+      entities:
+        - name: ScaffoldVendor
+          regid: https://github.com/ScaffoldOwner
+          roles:
+            - tagCreator
+            - softwareCreator
+
+#  Additional Release Files
+files:
+  artifacts:
+    - path: "out/sbom/*.json"
