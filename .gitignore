@@ -48,7 +48,28 @@ CodeCoverage/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# User secrets
+secrets.json
+
+# Rider
+.idea/
+*.sln.iml
+
 # NUnit
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Aspire
+.aspire/
+
+# Mise local env
+mise.local.toml
+mise.local.lock
+
+# AI
+.skills
+docs/superpowers
+# Only .claude.settings.json should be committed
+.claude/settings.local.json
+.claude/worktrees/*
