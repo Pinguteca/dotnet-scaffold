@@ -52,6 +52,38 @@ prek install
 mise run restore
 ```
 
+### Secrets Management
+
+Secrets are managed via [fnox](https://fnox.jdx.dev/) integrated with mise. The setup follows a 2-tier architecture aligned with 12-factor:
+
+1. **Remote source of truth**: Azure Key Vault, 1Password, Bitwarden Secrets Manager, AWS Secrets Manager, or HashiCorp Vault. Configured in `fnox.toml` under `[providers]`. Required for CI and production: all reads go directly against the remote, no local cache or encrypted fallback.
+2. **Local cache (OS Keychain, dev only)**: macOS Keychain, Windows Credential Manager, or Linux Secret Service. Populated via `fnox sync` to eliminate remote calls on every shell activation during development.
+
+**First-time setup (local dev):**
+
+```bash
+fnox init                        # initialize config
+mise run secrets:sync            # pull remote secrets into OS Keychain
+mise activate                    # subsequent activations read from keychain (offline, instant)
+```
+
+**Add or update secrets:**
+
+```bash
+fnox set DATABASE_URL <value>              # stored in default provider
+fnox set API_KEY <value> --profile production
+mise run secrets:refresh                   # re-sync keychain from remote
+```
+
+**Run commands with secrets loaded:**
+
+```bash
+fnox exec -- dotnet run
+fnox exec --profile production -- dotnet run
+```
+
+**CI/production:** No keychain (headless runners). Secrets read directly from the remote provider via workload identity or OIDC, configured in the `ci` and `production` profiles.
+
 ### Common Tasks
 
 | Task | Alias | Description |
@@ -62,8 +94,13 @@ mise run restore
 | `mise run restore` | `r` | Restore NuGet packages |
 | `mise run format` | `fmt` | Format code via `.editorconfig` rules |
 | `mise run format:check` | `fmtc` | Verify formatting without changes |
-| `mise run secret:scan` | `ss` | Scan for secrets with Kingfisher |
-| `mise run secret:validate` | `sv` | Validate & revoke live secrets |
+| `mise run secret:scan` | `ss` | Scan codebase for secrets with Kingfisher |
+| `mise run secret:validate` | `sv` | Validate & revoke live secrets found |
+| `mise run secrets:sync` | `ss-sync` | Sync remote secrets to OS Keychain |
+| `mise run secrets:sync-dry` | `ss-dry` | Preview secrets that would sync |
+| `mise run secrets:refresh` | `ss-refresh` | Force refresh OS Keychain from remote |
+| `mise run secrets:list` | `ss-ls` | List all resolved secrets for current profile |
+| `mise run openapi:generate` | `oag` | Generate OpenAPI spec from ApiService |
 | `mise run aspire:deploy` | `apd` | Deploy via Aspire |
 | `mise run release:sbom` | `rsbom` | Generate CycloneDX SBOM |
 

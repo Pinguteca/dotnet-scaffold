@@ -61,8 +61,44 @@ run = "kingfisher scan . --validate --validation-rps 2"
 alias = "sv"
 description = "Scan and validate live secrets for revocation"
 
+[tasks."openapi:generate"]
+run = """
+mkdir -p out/openapi
+dotnet build src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj \
+  --configuration Release
+"""
+description = "Generate OpenAPI spec from ApiService at out/openapi/"
+alias = "oag"
+
+[tasks."secrets:sync"]
+run = "fnox sync --provider keychain"
+alias = "ss-sync"
+description = "Sync secrets from remote provider to OS Keychain (local dev cache)"
+
+[tasks."secrets:sync-dry"]
+run = "fnox sync --provider keychain --dry-run"
+alias = "ss-dry"
+description = "Preview which secrets would sync to OS Keychain"
+
+[tasks."secrets:refresh"]
+run = "fnox sync --provider keychain --force"
+alias = "ss-refresh"
+description = "Force refresh all cached secrets in OS Keychain from remote"
+
+[tasks."secrets:list"]
+run = "fnox list"
+alias = "ss-ls"
+description = "List all resolved secrets for the current profile"
+
 [tools]
 "dotnet:aspire.cli" = "13.2.2"
+"github:jdx/fnox" = "1.20.0"
 "github:mongodb/kingfisher" = "1.95.0"
 pinact = "3.9.0"
 rtk = "0.33.1"
+
+[plugins]
+fnox-env = "https://github.com/jdx/mise-env-fnox"
+
+[env]
+_.fnox-env = { tools = true }

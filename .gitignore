@@ -74,3 +74,9 @@ docs/superpowers
 # Only .claude.settings.json should be committed
 .claude/settings.local.json
 .claude/worktrees/*
+
+# Fnox
+# Local cache and decrypted material - never commit
+.fnox/
+# Per-developer local overrides
+*.fnox.local

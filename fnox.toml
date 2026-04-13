@@ -1,0 +1,81 @@
+# fnox - 12-factor secret management aligned with mise env loading
+# Docs: https://fnox.jdx.dev/
+#
+# Architecture (2-tier):
+#   1. Remote source of truth: Azure Key Vault / 1Password / Bitwarden / AWS SM
+#      Required for CI and production - no local cache, direct reads only
+#   2. Local cache (dev only): OS Keychain (macOS Keychain, Windows Credential
+#      Manager, Linux Secret Service). Populated via `fnox sync --provider keychain`
+#      to avoid remote calls on every shell activation
+#
+# CI and production never use the keychain cache: there is no GUI session in
+# headless runners, and secrets must always resolve from the remote source of
+# truth to guarantee freshness and auditability.
+#
+# Quickstart (local dev):
+#   fnox init                            # initialize config
+#   fnox sync --provider keychain        # cache remote secrets to OS keychain
+#   mise activate                        # secrets load as env vars automatically
+
+# Stop parent directory search at this project boundary
+root = true
+
+# ============================================================================
+# Providers
+# ============================================================================
+
+[providers]
+
+# OS Keychain - primary local cache for dev, zero network calls after sync
+# Service name scopes fnox secrets away from other keychain entries
+keychain = { type = "keychain", service = "ScaffoldProjectName" }
+
+# Remote providers (uncomment whichever the team uses):
+
+# Azure Key Vault (uses az CLI or managed identity auth)
+# azure = { type = "azure-sm", vault_url = "https://ScaffoldProjectName-kv.vault.azure.net/" }
+
+# 1Password (uses op CLI, service account token via OP_SERVICE_ACCOUNT_TOKEN)
+# onepass = { type = "1password", vault = "ScaffoldProjectName" }
+
+# Bitwarden Secrets Manager (uses BWS_ACCESS_TOKEN)
+# bitwarden = { type = "bitwarden-sm", organization_id = "..." }
+
+# AWS Secrets Manager
+# aws = { type = "aws-sm", region = "us-east-1", prefix = "ScaffoldProjectName/" }
+
+# HashiCorp Vault
+# vault = { type = "vault", address = "https://vault.example.com" }
+
+# ============================================================================
+# Default secrets (loaded when no profile matches)
+# ============================================================================
+[secrets]
+# Plain defaults for local dev only (no sensitive data here!)
+# ASPNETCORE_ENVIRONMENT = { default = "Development" }
+
+# ============================================================================
+# Development profile - MISE_ENV=development (default for local work)
+# Secrets come from OS Keychain after initial sync from remote provider.
+# ============================================================================
+[profiles.development.secrets]
+# Example: sync this from Azure once, then read from keychain forever
+# DATABASE_URL = { provider = "keychain", value = "dev/database-url", if_missing = "warn" }
+# API_KEY = { provider = "keychain", value = "dev/api-key", if_missing = "warn" }
+
+# ============================================================================
+# CI profile - MISE_ENV=ci
+# Reads secrets directly from remote provider via workload identity / OIDC.
+# No keychain (no GUI session in CI runners).
+# ============================================================================
+[profiles.ci.secrets]
+# DATABASE_URL = { provider = "azure", value = "ci-database-url", if_missing = "error" }
+# API_KEY = { provider = "azure", value = "ci-api-key", if_missing = "error" }
+
+# ============================================================================
+# Production profile - MISE_ENV=production
+# Always reads from remote provider at runtime, never cached locally.
+# ============================================================================
+[profiles.production.secrets]
+# DATABASE_URL = { provider = "azure", value = "prod-database-url", if_missing = "error" }
+# API_KEY = { provider = "azure", value = "prod-api-key", if_missing = "error" }
