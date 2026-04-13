@@ -1,0 +1,7 @@
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: "repo:ScaffoldOwner/ScaffoldTemplate:ref:refs/heads/(main|master|develop)"
+claim_pattern:
+  workflow_ref: "ScaffoldOwner/ScaffoldTemplate/\\.github/workflows/img-optimization\\.yml@refs/heads/(main|master|develop)"
+permissions:
+  contents: write
+  pull-requests: write

@@ -1,0 +1,6 @@
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: "repo:ScaffoldOwner/ScaffoldTemplate:pull_request"
+claim_pattern:
+  workflow_ref: "ScaffoldOwner/ScaffoldTemplate/\\.github/workflows/verify-gha-integrity\\.yml@refs/heads/.*"
+permissions:
+  contents: write
