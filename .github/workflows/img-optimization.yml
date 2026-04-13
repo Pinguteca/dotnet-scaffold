@@ -1,0 +1,88 @@
+# Will run in the following scenarios:
+# - on Pull Requests NOT on draft containing images (not including forks)and aiming at `main`, `master` or `develop`
+# - on pushing of images to `main`, `master` or `develop`
+# - on demand via workflow_dispatch
+# - at 11 PM every Sunday in anything gets missed with any of the above scenarios
+# For Pull Requests, the images are added to the PR.
+# For other scenarios, a new PR will be opened if any images are compressed.
+name: Strip metadata and optimize images with Calibre
+on:
+  pull_request:
+    types: [reopened, ready_for_review, review_requested]
+    branches: [master, main, develop]
+    paths:
+      - "**.jpg"
+      - "**.jpeg"
+      - "**.png"
+      - "**.webp"
+      - "**.avif"
+  push:
+    branches: [master, main, develop]
+    paths:
+      - "**.jpg"
+      - "**.jpeg"
+      - "**.png"
+      - "**.webp"
+      - "**.avif"
+  workflow_dispatch:
+  schedule:
+    - cron: "00 23 * * 0"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  caliebreImgOptimization:
+    name: Optimize images with Calibre
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: write # to write commits
+      pull-requests: write # to create PRs
+
+    # Only run on main repo on and PRs that match the main repo.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      #if (harden-runner)
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+          disable-telemetry: "true"
+          disable-sudo: "true" # runs on container so same issue as zizmor
+      #endif
+      - name: Optimize Git config for CI
+        run: |
+          # Disable compression for faster network transfer.
+          git config --global core.compression 0
+          # Turn off fsync
+          git config --global core.fsync -all
+      - name: Checkout Branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            **.jpg
+            **.jpeg
+            **.png
+            **.webp
+            **.avif
+          sparse-checkout-cone-mode: false
+          filter: "blob:none"
+      - name: Compress Images
+        id: calibre
+        uses: calibreapp/image-actions@f32575787d333b0579f0b7d506ff03be63a669d1 # 1.4.1
+        with:
+          # For non-Pull Requests, run in compressOnly mode and we'll PR after.
+          compressOnly: ${{ github.event_name != 'pull_request' }}
+          minPctChange: "0" # Guarantees metadata removal
+          jpegQuality: "85"
+          jpegProgressive: true
+          pngQuality: "80"
+          webpQuality: "85"
+          avifQuality: "75"
