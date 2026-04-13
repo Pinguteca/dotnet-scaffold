@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "Pinguteca",
+  "classifications": ["Web", "API", "Aspire", ".NET"],
+  "name": "Aspire Scaffold (API with production tooling)",
+  "defaultName": "MyApp",
+  "description": "A highly opinionated tool .NET 10 Aspire solution scaffold with release automation, SBOM, signing, pre-commit hooks, and conventional commits.",
+  "shortName": "aspire-scaffold",
+  "sourceName": "ScaffoldProjectName",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "identity": "Pinguteca.Aspire.Scaffold",
+  "guids": ["00000000-0000-0000-0000-000000000001"],
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "exclude": [
+        "**/bin/**",
+        "**/obj/**",
+        ".template.config/**",
+        "docs/**",
+        "**/*.user"
+      ],
+      "modifiers": [
+        {
+          "condition": "(!public-repo)",
+          "exclude": [".github/workflows/scorecard.yml"]
+        },
+        {
+          "condition": "(license == \"none\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ]
+        },
+        {
+          "condition": "(license == \"MIT\")",
+          "exclude": [
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-MIT": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"Apache-2.0\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-Apache": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"GPL-3.0\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-GPL3": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"AGPL-3.0\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-AGPL3": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"LGPL-3.0\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-LGPL3": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"BSD-2-Clause\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD3",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-BSD2": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"BSD-3-Clause\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-MPL2"
+          ],
+          "rename": { "LICENSE-BSD3": "LICENSE" }
+        },
+        {
+          "condition": "(license == \"MPL-2.0\")",
+          "exclude": [
+            "LICENSE-MIT",
+            "LICENSE-Apache",
+            "LICENSE-GPL3",
+            "LICENSE-AGPL3",
+            "LICENSE-LGPL3",
+            "LICENSE-BSD2",
+            "LICENSE-BSD3"
+          ],
+          "rename": { "LICENSE-MPL2": "LICENSE" }
+        }
+      ],
+      "copyOnly": ["**/*.png", "**/*.ico"]
+    }
+  ],
+  "symbols": {
+    "description": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Short project description",
+      "replaces": "ScaffoldDescription",
+      "isRequired": true
+    },
+    "owner": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "GitHub organization or user name",
+      "replaces": "ScaffoldOwner",
+      "isRequired": true
+    },
+    "project-author": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Primary author name",
+      "replaces": "ScaffoldAuthor",
+      "isRequired": true
+    },
+    "repo-name": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Repository name (defaults to project name)",
+      "defaultValue": ""
+    },
+    "repoNameResolved": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "repo-name",
+        "fallbackVariableName": "name"
+      },
+      "replaces": "ScaffoldTemplate"
+    },
+    "vendor": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Vendor/organization display name (defaults to owner)",
+      "defaultValue": ""
+    },
+    "vendorResolved": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "vendor",
+        "fallbackVariableName": "owner"
+      },
+      "replaces": "ScaffoldVendor"
+    },
+    "renovate-config": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Renovate config repository name",
+      "replaces": "ScaffoldRenovateConfig",
+      "defaultValue": "renovate-config"
+    },
+    "public-repo": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Public repository (enables OpenSSF Scorecard)",
+      "defaultValue": "false"
+    },
+    "harden-runner": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "Include StepSecurity harden-runner in workflows (free for public repos, paid for private)",
+      "defaultValue": "true"
+    },
+    "license": {
+      "type": "parameter",
+      "datatype": "choice",
+      "description": "License type",
+      "defaultValue": "none",
+      "choices": [
+        { "choice": "none", "description": "No license (private project)" },
+        { "choice": "MIT", "description": "MIT License" },
+        { "choice": "Apache-2.0", "description": "Apache License 2.0" },
+        {
+          "choice": "GPL-3.0",
+          "description": "GNU General Public License v3.0"
+        },
+        {
+          "choice": "AGPL-3.0",
+          "description": "GNU Affero General Public License v3.0"
+        },
+        {
+          "choice": "LGPL-3.0",
+          "description": "GNU Lesser General Public License v3.0"
+        },
+        {
+          "choice": "BSD-2-Clause",
+          "description": "BSD 2-Clause Simplified License"
+        },
+        {
+          "choice": "BSD-3-Clause",
+          "description": "BSD 3-Clause New or Revised License"
+        },
+        { "choice": "MPL-2.0", "description": "Mozilla Public License 2.0" }
+      ]
+    },
+    "hasLicense": {
+      "type": "computed",
+      "value": "(license != \"none\")"
+    },
+    "licenseId": {
+      "type": "generated",
+      "generator": "switch",
+      "replaces": "LICENSE_SPDX_ID",
+      "parameters": {
+        "cases": [
+          { "condition": "(license == \"MIT\")", "value": "MIT" },
+          { "condition": "(license == \"Apache-2.0\")", "value": "Apache-2.0" },
+          { "condition": "(license == \"GPL-3.0\")", "value": "GPL-3.0-only" },
+          {
+            "condition": "(license == \"AGPL-3.0\")",
+            "value": "AGPL-3.0-only"
+          },
+          {
+            "condition": "(license == \"LGPL-3.0\")",
+            "value": "LGPL-3.0-only"
+          },
+          {
+            "condition": "(license == \"BSD-2-Clause\")",
+            "value": "BSD-2-Clause"
+          },
+          {
+            "condition": "(license == \"BSD-3-Clause\")",
+            "value": "BSD-3-Clause"
+          },
+          { "condition": "(license == \"MPL-2.0\")", "value": "MPL-2.0" }
+        ]
+      }
+    },
+    "GeneratedClassNamePrefix": {
+      "type": "generated",
+      "generator": "regex",
+      "datatype": "string",
+      "replaces": "GeneratedClassNamePrefix",
+      "parameters": {
+        "source": "name",
+        "steps": [
+          {
+            "regex": "(((?<=\\.)|^)(?=\\d)|\\W)",
+            "replacement": "_"
+          }
+        ]
+      }
+    },
+    "hostIdentifier": {
+      "type": "bind",
+      "binding": "HostIdentifier"
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    }
+  },
+  "specialCustomOperations": {
+    "**/*.yml": {
+      "operations": [
+        {
+          "type": "conditional",
+          "configuration": {
+            "if": ["#if"],
+            "else": ["#else"],
+            "elseif": ["#elseif"],
+            "endif": ["#endif"],
+            "actionableIf": ["##if"],
+            "actionableElse": ["##else"],
+            "actionableElseif": ["##elseif"],
+            "actions": ["uncomment"],
+            "wholeLine": true,
+            "trim": true,
+            "evaluator": "C++"
+          }
+        },
+        {
+          "type": "replacement",
+          "configuration": {
+            "original": "# ",
+            "replacement": "",
+            "id": "uncomment"
+          }
+        }
+      ]
+    }
+  },
+  "primaryOutputs": [
+    {
+      "path": "ScaffoldProjectName.slnx"
+    },
+    {
+      "path": "src/ScaffoldProjectName.AppHost/ScaffoldProjectName.AppHost.csproj"
+    },
+    {
+      "path": "src/ScaffoldProjectName.ServiceDefaults/ScaffoldProjectName.ServiceDefaults.csproj"
+    },
+    {
+      "path": "src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj"
+    }
+  ],
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}
