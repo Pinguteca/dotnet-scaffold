@@ -56,7 +56,7 @@ hooks = [
     entry = "dotnet",
     args = [
         "restore",
-        "--force-evaluate"
+        "--locked-mode"
     ],
     stages = ["pre-commit"],
     files = "(?:\\.csproj|Directory\\.Packages\\.props)$",
