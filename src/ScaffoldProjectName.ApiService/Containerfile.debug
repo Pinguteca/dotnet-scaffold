@@ -1,0 +1,46 @@
+FROM --platform=$BUILDPLATFORM cgr.dev/chainguard/dotnet-sdk:latest-dev@sha256:ec837aa657c96c7f5f99c13bcece0f196fe990e90be305ee4f63f4c699bf2aa7 AS build
+
+ARG TARGETARCH="amd64"
+ARG BASE="ScaffoldProjectName"
+ARG TARGETPROJECT="ScaffoldProjectName.ApiService"
+
+WORKDIR /src
+
+COPY --chown=65532:65532 "src/$BASE.ServiceDefaults" ./src/$BASE.ServiceDefaults/
+COPY --chown=65532:65532 "src/$TARGETPROJECT" ./src/$TARGETPROJECT/
+COPY --chown=65532:65532 Directory.Build.props ./
+COPY --chown=65532:65532 Directory.Build.targets ./
+COPY --chown=65532:65532 Directory.Packages.props ./
+COPY --chown=65532:65532 *.slnx ./
+COPY --chown=65532:65532 global.json ./
+COPY --chown=65532:65532 nuget.config ./
+
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    --mount=type=cache,target=/root/.local/share/NuGet/v3-cache \
+    --mount=type=cache,target=/root/.local/share/NuGet/plugins-cache \
+    --mount=type=cache,target=/tmp/NuGetScratchroot \
+    dotnet restore -a $TARGETARCH "src/$TARGETPROJECT/$TARGETPROJECT.csproj"
+
+
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    --mount=type=cache,target=/root/.local/share/NuGet/v3-cache \
+    --mount=type=cache,target=/root/.local/share/NuGet/plugins-cache \
+    --mount=type=cache,target=/tmp/NuGetScratchroot \
+    dotnet publish "src/$TARGETPROJECT/$TARGETPROJECT.csproj" \
+    --no-restore \
+    --configuration Release \
+    --output dist/publish
+
+# Final stage
+FROM cgr.dev/chainguard/aspnet-runtime:latest-dev@sha256:dc2cb3275ecfdc85e954e129aa975b50f36d5ab0e198ccf658dac2d661fe6e12 AS final
+
+WORKDIR /app
+
+COPY --from=build /src/dist/publish .
+
+ENV DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_EnableDiagnostics=0 \
+    HTTP_PORT=8080 \
+    ASPNETCORE_ENVIRONMENT=Development
+
+ENTRYPOINT ["dotnet", "ScaffoldProjectName.ApiService.dll"]

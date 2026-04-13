@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/ScaffoldProjectName.AppHost/ScaffoldProjectName.AppHost.csproj" />
+  <Project Path="src/ScaffoldProjectName.ServiceDefaults/ScaffoldProjectName.ServiceDefaults.csproj" />
+  <Project Path="src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj" />
+</Solution>

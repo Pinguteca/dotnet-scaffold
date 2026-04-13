@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "src/ScaffoldProjectName.AppHost/ScaffoldProjectName.AppHost.csproj"
+  }
+}
