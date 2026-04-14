@@ -80,3 +80,7 @@ docs/superpowers
 .fnox/
 # Per-developer local overrides
 *.fnox.local
+
+# Generated artifacts
+out/
+openapitools.json

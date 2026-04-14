@@ -1,6 +1,7 @@
 <Project>
   <!-- Isolate file tasks from repo-level build configuration -->
   <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <IncludeSymbols>false</IncludeSymbols>

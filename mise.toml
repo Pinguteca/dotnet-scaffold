@@ -62,54 +62,11 @@ run = "kingfisher scan . --validate --validation-rps 2"
 alias = "sv"
 description = "Scan and validate live secrets for revocation"
 
-[tasks."openapi:generate"]
-run = """
-mkdir -p out/openapi
-dotnet build src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj \
-  --configuration Release
-"""
-description = "Generate OpenAPI spec from ApiService at out/openapi/"
-alias = "oag"
-
 [tasks."openapi:lint"]
 depends = ["openapi:generate"]
 run = "spectral lint out/openapi/ScaffoldProjectName.ApiService.json --ruleset .spectral.yml --format pretty"
 alias = "oal"
 description = "Lint generated OpenAPI spec against Spectral rules"
-
-[tasks."openapi:diff"]
-depends = ["openapi:generate"]
-run = """
-# Compare current OpenAPI spec against the baseline committed at openapi-baseline.json
-# If no baseline exists yet, this task succeeds (first-time generation)
-if [ -f openapi-baseline.json ]; then
-  oasdiff changelog openapi-baseline.json out/openapi/ScaffoldProjectName.ApiService.json \
-    --format text
-else
-  echo "No baseline at openapi-baseline.json - skipping diff"
-fi
-"""
-alias = "oad"
-description = "Show all OpenAPI changes since the committed baseline"
-
-[tasks."openapi:breaking"]
-depends = ["openapi:generate"]
-run = """
-if [ -f openapi-baseline.json ]; then
-  oasdiff breaking openapi-baseline.json out/openapi/ScaffoldProjectName.ApiService.json \
-    --fail-on ERR --format text
-else
-  echo "No baseline at openapi-baseline.json - skipping breaking change detection"
-fi
-"""
-alias = "oab"
-description = "Fail if there are breaking changes vs the committed baseline"
-
-[tasks."openapi:baseline"]
-depends = ["openapi:generate"]
-run = "cp out/openapi/ScaffoldProjectName.ApiService.json openapi-baseline.json"
-alias = "oabl"
-description = "Update the OpenAPI baseline (commit the result to version the contract)"
 
 [tasks."secrets:sync"]
 run = "fnox sync --provider keychain"
@@ -131,107 +88,6 @@ run = "fnox list"
 alias = "ss-ls"
 description = "List all resolved secrets for the current profile"
 
-[tasks."sdk:gen:java"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name java \
-  --output out/sdk/java \
-  --additional-properties=groupId=ScaffoldOwner,artifactId=ScaffoldProjectName-client,apiPackage=ScaffoldProjectName.client.api,modelPackage=ScaffoldProjectName.client.model,library=resttemplate
-"""
-description = "Generate Java client SDK"
-
-[tasks."sdk:gen:kotlin"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name kotlin \
-  --output out/sdk/kotlin \
-  --additional-properties=groupId=ScaffoldOwner,artifactId=ScaffoldProjectName-client,packageName=ScaffoldProjectName.client,library=jvm-okhttp4
-"""
-description = "Generate Kotlin client SDK"
-
-[tasks."sdk:gen:go"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name go \
-  --output out/sdk/go \
-  --additional-properties=packageName=ScaffoldProjectNameClient,moduleName=github.com/ScaffoldOwner/ScaffoldTemplate-go
-"""
-description = "Generate Go client SDK"
-
-[tasks."sdk:gen:rust"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name rust \
-  --output out/sdk/rust \
-  --additional-properties=packageName=ScaffoldProjectName-client,library=reqwest,supportAsync=true,supportMiddleware=true
-"""
-description = "Generate Rust client SDK"
-
-[tasks."sdk:gen:python"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name python \
-  --output out/sdk/python \
-  --additional-properties=packageName=ScaffoldProjectName_client,projectName=ScaffoldProjectName-client,library=urllib3
-"""
-description = "Generate Python client SDK"
-
-[tasks."sdk:gen:typescript"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name typescript-fetch \
-  --output out/sdk/typescript \
-  --additional-properties=npmName=@ScaffoldOwner/ScaffoldProjectName-client,supportsES6=true,typescriptThreePlus=true,withInterfaces=true
-"""
-description = "Generate TypeScript client SDK (fetch-based, covers JS/TS)"
-
-[tasks."sdk:gen:csharp"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name csharp \
-  --output out/sdk/csharp \
-  --additional-properties=packageName=ScaffoldProjectName.Client,targetFramework=net10.0,library=httpclient
-"""
-description = "Generate .NET (C#) client SDK"
-
-[tasks."sdk:gen:dart"]
-depends = ["openapi:generate"]
-run = """
-openapi-generator-cli generate \
-  --input-spec out/openapi/ScaffoldProjectName.ApiService.json \
-  --generator-name dart \
-  --output out/sdk/dart \
-  --additional-properties=pubName=scaffoldprojectname_client,pubLibrary=scaffoldprojectname_client.api
-"""
-description = "Generate Dart client SDK"
-
-[tasks."sdk:gen:all"]
-depends = [
-  "sdk:gen:java",
-  "sdk:gen:kotlin",
-  "sdk:gen:go",
-  "sdk:gen:rust",
-  "sdk:gen:python",
-  "sdk:gen:typescript",
-  "sdk:gen:csharp",
-  "sdk:gen:dart"
-]
-description = "Generate client SDKs for all 8 supported languages"
-
 [tools]
 "github:mongodb/kingfisher" = "1.95.0"
 "github:oasdiff/oasdiff" = "1.14.0"
@@ -242,6 +98,9 @@ java = "21.0.2"
 pinact = "3.9.0"
 rtk = "0.33.1"
 spectral = "6.15.0"
+pnpm = "10.33.0"
+dotnet = "10.0.202"
+node = "25.9.0"
 
 [plugins]
 fnox-env = "https://github.com/jdx/mise-env-fnox"

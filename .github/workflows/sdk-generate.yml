@@ -1,0 +1,62 @@
+name: Generate Client SDKs
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions: {}
+
+env:
+  CI: "true"
+  MISE_ENV: ci
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+
+jobs:
+  generate:
+    name: Generate client SDKs (8 languages)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+#if (harden-runner)
+      - name: Harden Runner
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+          disable-telemetry: "true"
+          disable-sudo-and-containers: "true"
+#endif
+      - name: Optimize Git config for CI
+        run: |
+          git config --global core.compression 0
+          git config --global core.fsync -all
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          filter: "blob:none"
+
+      - name: Install mise and tools (includes Java for generator)
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
+        with:
+          experimental: true
+
+      - name: Generate SDKs for all languages
+        run: mise run ci:sdk:gen:all
+
+      - name: Upload SDK artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: client-sdks
+          path: out/sdk/
+          retention-days: 90

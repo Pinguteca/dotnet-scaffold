@@ -1,5 +1,5 @@
 [settings]
-experimental = false
+experimental = true
 # Caching
 env_cache = true
 env_cache_ttl = "9h"
@@ -55,14 +55,6 @@ fi
 description = "Fail CI if there are breaking OpenAPI changes vs baseline"
 
 [tasks."ci:sdk:gen:all"]
-depends = [
-  "sdk:gen:java",
-  "sdk:gen:kotlin",
-  "sdk:gen:go",
-  "sdk:gen:rust",
-  "sdk:gen:python",
-  "sdk:gen:typescript",
-  "sdk:gen:csharp",
-  "sdk:gen:dart"
-]
+depends = ["openapi:generate"]
+run = "mise run sdk:generate -- all"
 description = "Generate all client SDKs in CI (fails fast on any generator error)"

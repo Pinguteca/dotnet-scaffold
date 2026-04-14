@@ -1,0 +1,6 @@
+<Project>
+  <!-- Stop MSBuild from inheriting the root Directory.Packages.props into file-tasks -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

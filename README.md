@@ -104,6 +104,37 @@ fnox exec --profile production -- dotnet run
 | `mise run aspire:deploy` | `apd` | Deploy via Aspire |
 | `mise run release:sbom` | `rsbom` | Generate CycloneDX SBOM |
 
+
+## Client SDK Generation
+
+Client SDKs are auto-generated from the OpenAPI spec via [openapi-generator](https://openapi-generator.tech/). Supported languages:
+
+- Java
+- Kotlin
+- Go
+- Rust
+- Python
+- TypeScript (covers JavaScript too, fetch-based)
+- .NET (C#)
+- Dart
+
+### Local generation
+
+```bash
+# Generate for one language
+mise run sdk:gen:java
+mise run sdk:gen:rust
+
+# Generate all 8
+mise run sdk:gen:all
+```
+
+Output goes to `out/sdk/<language>/`. Configure package names in `mise.toml` under the `sdk:gen:*` tasks.
+
+### CI generation
+
+The `sdk-generate.yml` workflow runs on release tags (`v*`) and uploads the SDK set as a workflow artifact.
+
 ## Development
 
 Start the Aspire dashboard:
