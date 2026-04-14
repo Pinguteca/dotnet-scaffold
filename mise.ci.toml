@@ -38,3 +38,31 @@ else
 fi
 """
 description = "Run tests in Release with TRX logger and XPlat coverage"
+
+[tasks."ci:openapi:lint"]
+run = "spectral lint out/openapi/ScaffoldProjectName.ApiService.json --ruleset .spectral.yml --format github-actions"
+description = "Lint OpenAPI spec with GitHub Actions annotations"
+
+[tasks."ci:openapi:breaking"]
+run = """
+if [ -f openapi-baseline.json ]; then
+  oasdiff breaking openapi-baseline.json out/openapi/ScaffoldProjectName.ApiService.json \
+    --fail-on ERR --format githubactions
+else
+  echo "::warning::No OpenAPI baseline committed - skipping breaking change detection"
+fi
+"""
+description = "Fail CI if there are breaking OpenAPI changes vs baseline"
+
+[tasks."ci:sdk:gen:all"]
+depends = [
+  "sdk:gen:java",
+  "sdk:gen:kotlin",
+  "sdk:gen:go",
+  "sdk:gen:rust",
+  "sdk:gen:python",
+  "sdk:gen:typescript",
+  "sdk:gen:csharp",
+  "sdk:gen:dart"
+]
+description = "Generate all client SDKs in CI (fails fast on any generator error)"

@@ -128,6 +128,53 @@ url = "https://github.com/mongodb/kingfisher/releases/download/v1.95.0/kingfishe
 url_api = "https://api.github.com/repos/mongodb/kingfisher/releases/assets/393113761"
 provenance = "github-attestations"
 
+[[tools."github:oasdiff/oasdiff"]]
+version = "1.14.0"
+backend = "github:oasdiff/oasdiff"
+
+[tools."github:oasdiff/oasdiff"."platforms.linux-arm64"]
+checksum = "sha256:5f2ec17ce56c126f6538be8e48d0cf9a6fb06e11bdac86ebb3921e6f7f744d79"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694787"
+
+[tools."github:oasdiff/oasdiff"."platforms.linux-arm64-musl"]
+checksum = "sha256:5f2ec17ce56c126f6538be8e48d0cf9a6fb06e11bdac86ebb3921e6f7f744d79"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694787"
+
+[tools."github:oasdiff/oasdiff"."platforms.linux-x64"]
+checksum = "sha256:43bd57731f815d04b4e89ed187b23d99a95eef7eb79ef324d8069446e4cdd331"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694784"
+
+[tools."github:oasdiff/oasdiff"."platforms.linux-x64-musl"]
+checksum = "sha256:43bd57731f815d04b4e89ed187b23d99a95eef7eb79ef324d8069446e4cdd331"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694784"
+
+[tools."github:oasdiff/oasdiff"."platforms.macos-arm64"]
+checksum = "sha256:f9a773d190399c7ea13c79692fe26811ea5b5fe9d3c5e7eedf59d61384475de8"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694792"
+
+[tools."github:oasdiff/oasdiff"."platforms.macos-x64"]
+checksum = "sha256:f9a773d190399c7ea13c79692fe26811ea5b5fe9d3c5e7eedf59d61384475de8"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_darwin_all.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694792"
+
+[tools."github:oasdiff/oasdiff"."platforms.windows-x64"]
+checksum = "sha256:6062651dc21314a7b8e356d2e521ddaeaf5eaf100c27265f45720c45a9df5595"
+url = "https://github.com/oasdiff/oasdiff/releases/download/v1.14.0/oasdiff_1.14.0_windows_amd64.tar.gz"
+url_api = "https://api.github.com/repos/oasdiff/oasdiff/releases/assets/394694786"
+
+[[tools.java]]
+version = "21.0.2"
+backend = "core:java"
+
+[[tools."npm:@openapitools/openapi-generator-cli"]]
+version = "2.31.1"
+backend = "npm:@openapitools/openapi-generator-cli"
+
 [[tools.pinact]]
 version = "3.9.0"
 backend = "aqua:suzuki-shunsuke/pinact"
@@ -205,3 +252,28 @@ url_api = "https://api.github.com/repos/rtk-ai/rtk/releases/assets/381214451"
 checksum = "sha256:c9040751e2b0225ca7cf65cc5c8be68349a43bf3cb4c85425fc2594f6eceadb7"
 url = "https://github.com/rtk-ai/rtk/releases/download/v0.33.1/rtk-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/rtk-ai/rtk/releases/assets/381214452"
+
+[[tools.spectral]]
+version = "6.15.0"
+backend = "aqua:stoplightio/spectral"
+
+[tools.spectral."platforms.linux-arm64"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-linux-arm64"
+
+[tools.spectral."platforms.linux-arm64-musl"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-linux-arm64"
+
+[tools.spectral."platforms.linux-x64"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-linux-x64"
+
+[tools.spectral."platforms.linux-x64-musl"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-linux-x64"
+
+[tools.spectral."platforms.macos-arm64"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-macos-arm64"
+
+[tools.spectral."platforms.macos-x64"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral-macos-x64"
+
+[tools.spectral."platforms.windows-x64"]
+url = "https://github.com/stoplightio/spectral/releases/download/v6.15.0/spectral.exe"
