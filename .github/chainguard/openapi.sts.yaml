@@ -1,0 +1,7 @@
+issuer: https://token.actions.githubusercontent.com
+subject_pattern: "repo:ScaffoldOwner/ScaffoldTemplate:(ref:refs/heads/main|pull_request)"
+claim_pattern:
+  workflow_ref: "ScaffoldOwner/ScaffoldTemplate/\\.github/workflows/openapi\\.yml@refs/heads/.*"
+permissions:
+  contents: read
+  pull-requests: write
