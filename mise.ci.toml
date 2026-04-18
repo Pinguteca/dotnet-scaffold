@@ -27,32 +27,6 @@ description = "Restore NuGet packages in locked mode (verifies lockfiles match)"
 run = "dotnet build ScaffoldProjectName.slnx --configuration Release --no-restore"
 description = "Build solution in Release configuration without restoring"
 
-[tasks."ci:test"]
-run = """
-if ls tests/*.csproj >/dev/null 2>&1 || ls test/*.csproj >/dev/null 2>&1; then
-  dotnet test ScaffoldProjectName.slnx --configuration Release --no-build \
-    --logger "trx;LogFileName=test-results.trx" \
-    --collect:"XPlat Code Coverage"
-else
-  echo "No test projects found, skipping tests"
-fi
-"""
-description = "Run tests in Release with TRX logger and XPlat coverage"
-
-[tasks."ci:openapi:lint"]
-run = "spectral lint out/openapi/ScaffoldProjectName.ApiService.json --ruleset .spectral.yml --format github-actions"
-description = "Lint OpenAPI spec with GitHub Actions annotations"
-
-[tasks."ci:openapi:breaking"]
-run = """
-if [ -f openapi-baseline.json ]; then
-  oasdiff breaking openapi-baseline.json out/openapi/ScaffoldProjectName.ApiService.json \
-    --fail-on ERR --format githubactions
-else
-  echo "::warning::No OpenAPI baseline committed - skipping breaking change detection"
-fi
-"""
-description = "Fail CI if there are breaking OpenAPI changes vs baseline"
 
 [tasks."ci:sdk:gen:all"]
 depends = ["openapi:generate"]

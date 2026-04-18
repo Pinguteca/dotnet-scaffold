@@ -1,30 +1,35 @@
 #!/usr/bin/env dotnet
-//MISE description="Fail if there are breaking changes vs the committed baseline"
+//MISE description="Lint OpenAPI spec with CI-friendly output format"
 //MISE depends=["openapi:generate"]
-//MISE alias="oab"
 #:property PublishAot=false
 #:package CliWrap@*
 
 using CliWrap;
 
 var repoRoot = Environment.CurrentDirectory;
-var baseline = Path.Combine(repoRoot, "openapi-baseline.json");
-var current = Path.Combine(repoRoot, "out", "openapi", "ScaffoldProjectName.ApiService.json");
+var spec = Path.Combine(repoRoot, "out", "openapi", "ScaffoldProjectName.ApiService.json");
+var ruleset = Path.Combine(repoRoot, ".spectral.yml");
 
-if (!File.Exists(baseline))
+if (!File.Exists(spec))
 {
-    Info("No baseline at openapi-baseline.json - skipping breaking change detection");
-    return 0;
+    Err($"OpenAPI spec not found at {spec}");
+    Err("Run 'mise run openapi:generate' first");
+    return 1;
 }
 
-Info("Checking for breaking changes against openapi-baseline.json...");
+Info("Linting OpenAPI spec");
 
+// Use github-actions format if running in CI, pretty otherwise
 var isCI = Environment.GetEnvironmentVariable("CI") == "true"
     || Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
-var format = isCI ? "githubactions" : "text";
+var format = isCI ? "github-actions" : "pretty";
 
-var result = await Cli.Wrap("oasdiff")
-    .WithArguments(["breaking", baseline, current, "--fail-on", "ERR", "--format", format])
+var result = await Cli.Wrap("spectral")
+    .WithArguments([
+        "lint", spec,
+        "--ruleset", ruleset,
+        "--format", format
+    ])
     .WithWorkingDirectory(repoRoot)
     .WithValidation(CommandResultValidation.None)
     .WithStandardOutputPipe(PipeTarget.ToStream(Console.OpenStandardOutput()))
@@ -33,11 +38,11 @@ var result = await Cli.Wrap("oasdiff")
 
 if (result.ExitCode != 0)
 {
-    Err($"Breaking changes detected (exit code {result.ExitCode})");
+    Err($"Spectral lint failed (exit code {result.ExitCode})");
     return result.ExitCode;
 }
 
-Ok("No breaking changes detected");
+Ok("OpenAPI spec passed lint checks");
 return 0;
 
 static void Info(string msg) => Console.WriteLine($"\x1b[1;34m==> {msg}\x1b[0m");

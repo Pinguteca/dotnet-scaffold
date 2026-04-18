@@ -57,10 +57,10 @@ jobs:
         run: mise run openapi:generate
 
       - name: Lint spec
-        run: mise run ci:openapi:lint
+        run: mise run openapi:lint
 
       - name: Check breaking changes
-        run: mise run ci:openapi:breaking
+        run: mise run openapi:breaking
 
       - name: Upload spec
         if: always()

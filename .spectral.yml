@@ -3,20 +3,12 @@ extends:
 
 rules:
   # ----- Operation conventions -----
-  operation-operationId: error
-  operation-operationId-unique: error
-  operation-operationId-valid-in-url: error
   operation-description: warn
-  operation-summary: warn
   operation-tags: warn
-
-  # ----- Response conventions -----
-  operation-success-response: error
-  operation-4xx-response: warn
-
-  # ----- Request/response structure -----
+  operation-tag-defined: warn
+  operation-singular-tag: off
   operation-parameters: error
-  no-$ref-siblings: error
+  operation-success-response: error
 
   # ----- Info block -----
   info-contact: warn
@@ -26,36 +18,40 @@ rules:
   # ----- Tagging -----
   openapi-tags: warn
   openapi-tags-alphabetical: off
+  openapi-tags-uniqueness: error
+  tag-description: warn
 
   # ----- Path conventions -----
   path-declarations-must-exist: error
   path-keys-no-trailing-slash: error
   path-not-include-query: error
-  path-params-defined:
-    description: Path parameters must be defined in the parameters section.
-    message: "Path parameter '{{value}}' is not defined in the parameters section."
-    severity: error
-    given: "$.paths"
-    then:
-      function: oasPathParam
+  path-params: error
 
   # ----- Schema conventions -----
   typed-enum: error
   duplicated-entry-in-enum: error
+  array-items: warn
 
-  # ----- Property descriptions -----
+  # ----- OAS3-specific -----
+  oas3-api-servers: warn
+  oas3-parameter-description: warn
   oas3-schema: error
-
-  # Require descriptions on all schema properties
-  schema-properties-define-enum-values:
-    description: Enum values should always be defined.
-    message: Schema of type string should define enum values.
-    severity: off
+  oas3-unused-component: warn
+  oas3-server-trailing-slash: error
+  oas3-server-variables: error
+  oas3-operation-security-defined: error
+  oas3-valid-media-example: warn
+  oas3-valid-schema-example: warn
 
   # ----- Security -----
-  oas3-api-servers: warn
+  no-eval-in-markdown: error
+  no-script-tags-in-markdown: error
 
-  # ----- Custom: require operationId to use kebab-case or camelCase -----
+  # ----- Contact -----
+  contact-properties: off
+  license-url: off
+
+  # ----- Custom: operationId must use camelCase -----
   operation-operationId-casing:
     description: OperationId must use camelCase.
     message: "OperationId '{{value}}' should be camelCase."
@@ -66,7 +62,7 @@ rules:
       functionOptions:
         match: "^[a-z][a-zA-Z0-9]*$"
 
-  # ----- Custom: all request bodies must have a content type -----
+  # ----- Custom: request bodies must have a content type -----
   request-body-must-have-content:
     description: Request body must have at least one content type defined.
     message: Request body is defined without a content type.
@@ -86,54 +82,20 @@ rules:
       field: description
       function: truthy
 
-  # ----- Custom: require examples or schema on response media types -----
+  # ----- Custom: successful responses should define a schema -----
   response-success-must-have-schema:
     description: Successful responses should define a schema.
-    message: "{{description}}: {{path}}"
     severity: warn
-    given: "$.paths.*.*.responses[?(@property >= '200' && @property < '300')].content.*"
+    given: "$.paths.*.*.responses.2*.content.*"
     then:
       field: schema
       function: truthy
 
-  # ----- Custom: 4xx/5xx responses should use standard problem format -----
+  # ----- Custom: error responses should define a schema -----
   error-response-schema:
     description: Error responses should include a schema for the error payload.
-    message: "Error response {{path}} is missing a schema definition."
     severity: warn
-    given: "$.paths.*.*.responses[?(@property >= '400')].content.*"
+    given: "$.paths.*.*.responses.4*.content.*"
     then:
       field: schema
-      function: truthy
-
-  # ----- Custom: servers must be defined -----
-  must-have-servers:
-    description: The API must define at least one server.
-    message: No servers are defined for this API.
-    severity: warn
-    given: "$"
-    then:
-      field: servers
-      function: truthy
-
-  # ----- Custom: contact must include url or email -----
-  contact-properties:
-    description: The info.contact object should have at minimum a name and url.
-    message: "{{description}}"
-    severity: off
-    given: "$.info.contact"
-    then:
-      - field: name
-        function: truthy
-      - field: url
-        function: truthy
-
-  # ----- Custom: tags should have descriptions -----
-  tag-description:
-    description: Tags should have a description for better API documentation.
-    message: "Tag '{{value}}' is missing a description."
-    severity: warn
-    given: "$.tags[*]"
-    then:
-      field: description
       function: truthy

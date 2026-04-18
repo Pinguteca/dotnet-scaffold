@@ -62,11 +62,6 @@ run = "kingfisher scan . --validate --validation-rps 2"
 alias = "sv"
 description = "Scan and validate live secrets for revocation"
 
-[tasks."openapi:lint"]
-depends = ["openapi:generate"]
-run = "spectral lint out/openapi/ScaffoldProjectName.ApiService.json --ruleset .spectral.yml --format pretty"
-alias = "oal"
-description = "Lint generated OpenAPI spec against Spectral rules"
 
 [tasks."secrets:sync"]
 run = "fnox sync --provider keychain"
