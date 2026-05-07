@@ -43,8 +43,3 @@ description = "Detect breaking proto changes vs main with GHA annotations"
 [tasks."ci:proto:generate"]
 run = "buf generate"
 description = "Generate code from proto in CI"
-
-[tasks."ci:sdk:gen:all"]
-depends = ["openapi:generate"]
-run = "mise run sdk:generate -- all"
-description = "Generate all client SDKs in CI (fails fast on any generator error)"

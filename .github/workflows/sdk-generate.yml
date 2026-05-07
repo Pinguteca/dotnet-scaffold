@@ -14,13 +14,10 @@ permissions: {}
 env:
   CI: "true"
   MISE_ENV: ci
-  DOTNET_NOLOGO: "true"
-  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
 
 jobs:
   generate:
-    name: Generate client SDKs (8 languages)
+    name: Generate client SDKs via buf
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -29,7 +26,7 @@ jobs:
     steps:
 #if (harden-runner)
       - name: Harden Runner
-        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           egress-policy: audit
           disable-telemetry: "true"
@@ -46,13 +43,13 @@ jobs:
           persist-credentials: false
           filter: "blob:none"
 
-      - name: Install mise and tools (includes Java for generator)
+      - name: Install mise and tools
         uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         with:
           experimental: true
 
       - name: Generate SDKs for all languages
-        run: mise run ci:sdk:gen:all
+        run: mise run ci:proto:generate
 
       - name: Upload SDK artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

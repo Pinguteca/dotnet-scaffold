@@ -1,4 +1,4 @@
-name: OpenAPI
+name: Proto Lint and Breaking Change Detection
 
 on:
   push:
@@ -15,23 +15,19 @@ permissions: {}
 env:
   CI: "true"
   MISE_ENV: ci
-  DOTNET_NOLOGO: "true"
-  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
 
 jobs:
-  lint-and-diff:
-    name: Lint spec and detect breaking changes
+  proto:
+    name: Lint, format and breaking change check
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
-      pull-requests: write
 
     steps:
 #if (harden-runner)
       - name: Harden Runner
-        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
         with:
           egress-policy: audit
           disable-telemetry: "true"
@@ -45,6 +41,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          fetch-depth: 0
           persist-credentials: false
           filter: "blob:none"
 
@@ -53,19 +50,12 @@ jobs:
         with:
           experimental: true
 
-      - name: Generate OpenAPI spec
-        run: mise run openapi:generate
+      - name: Lint proto
+        run: mise run ci:proto:lint
 
-      - name: Lint spec
-        run: mise run openapi:lint
+      - name: Verify proto formatting
+        run: mise run ci:proto:format-check
 
-      - name: Check breaking changes
-        run: mise run openapi:breaking
-
-      - name: Upload spec
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: openapi-spec
-          path: out/openapi/
-          retention-days: 30
+      - name: Detect breaking changes
+        if: github.event_name == 'pull_request'
+        run: mise run ci:proto:breaking
