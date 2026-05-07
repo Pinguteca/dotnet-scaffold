@@ -1,0 +1,70 @@
+version: v2
+
+# Output destinations are scoped per-language under out/sdk/.
+# Generated code is gitignored - it is produced via 'mise run sdk:generate'.
+
+clean: true
+
+managed:
+  enabled: true
+  override:
+    - file_option: csharp_namespace
+      value: ScaffoldProjectName.V1
+    - file_option: java_package_prefix
+      value: com.ScaffoldOwner
+  disable:
+    - file_option: go_package_prefix
+      module: buf.build/googleapis/googleapis
+
+plugins:
+  # ---------------- Go (Connect-native) ----------------
+  - remote: buf.build/protocolbuffers/go
+    out: out/sdk/go/proto
+    opt:
+      - paths=source_relative
+  - remote: buf.build/connectrpc/go
+    out: out/sdk/go/connect
+    opt:
+      - paths=source_relative
+
+  # ---------------- TypeScript / JavaScript (Connect-native) ----------------
+  - remote: buf.build/bufbuild/es
+    out: out/sdk/typescript
+    opt:
+      - target=ts
+  - remote: buf.build/connectrpc/es
+    out: out/sdk/typescript
+    opt:
+      - target=ts
+
+  # ---------------- Kotlin (Connect-native) ----------------
+  - remote: buf.build/connectrpc/kotlin
+    out: out/sdk/kotlin
+
+  # ---------------- .NET (gRPC, no Connect-native client yet) ----------------
+  - remote: buf.build/protocolbuffers/csharp
+    out: out/sdk/csharp/proto
+  - remote: buf.build/grpc/csharp
+    out: out/sdk/csharp/grpc
+
+  # ---------------- Java (gRPC) ----------------
+  - remote: buf.build/protocolbuffers/java
+    out: out/sdk/java/proto
+  - remote: buf.build/grpc/java
+    out: out/sdk/java/grpc
+
+  # ---------------- Python (gRPC) ----------------
+  - remote: buf.build/protocolbuffers/python
+    out: out/sdk/python/proto
+  - remote: buf.build/grpc/python
+    out: out/sdk/python/grpc
+
+  # ---------------- Rust (gRPC via tonic) ----------------
+  - remote: buf.build/community/neoeinstein-prost
+    out: out/sdk/rust/proto
+  - remote: buf.build/community/neoeinstein-tonic
+    out: out/sdk/rust/grpc
+
+  # ---------------- Dart (gRPC) ----------------
+  - remote: buf.build/protocolbuffers/dart
+    out: out/sdk/dart

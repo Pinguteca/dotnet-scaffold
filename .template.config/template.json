@@ -173,6 +173,17 @@
       "replaces": "ScaffoldAuthor",
       "isRequired": true
     },
+    "bsr-module": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Buf Schema Registry module name (e.g. 'buf.build/myorg/myrepo'). Empty means local-only generation",
+      "replaces": "ScaffoldBsrModule",
+      "defaultValue": ""
+    },
+    "hasBsrModule": {
+      "type": "computed",
+      "value": "(bsr-module != \"\")"
+    },
     "identity-domains": {
       "type": "parameter",
       "datatype": "text",
@@ -300,6 +311,16 @@
         ]
       }
     },
+    "projectNameLower": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      },
+      "replaces": "scaffoldprojectname",
+      "fileRename": "scaffoldprojectname"
+    },
     "GeneratedClassNamePrefix": {
       "type": "generated",
       "generator": "regex",
@@ -348,7 +369,7 @@
     }
   },
   "specialCustomOperations": {
-    "**/*.yml": {
+    "**/*.{yml,yaml}": {
       "operations": [
         {
           "type": "conditional",

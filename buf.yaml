@@ -1,0 +1,25 @@
+version: v2
+
+# Buf module(s) for ScaffoldProjectName.
+# Set 'name' to publish to the Buf Schema Registry (BSR).
+# Public modules are free at buf.build/<owner>/<repo>.
+# Private modules require a paid BSR plan.
+# Leave commented for local-only generation.
+
+modules:
+  - path: proto
+#if (hasBsrModule)
+    name: ScaffoldBsrModule
+#endif
+
+lint:
+  use:
+    - STANDARD
+  except:
+    # Allow underscores in package names (csharp_namespace etc. require this)
+    - PACKAGE_LOWER_SNAKE_CASE
+
+breaking:
+  use:
+    - WIRE_JSON
+  ignore_unstable_packages: true

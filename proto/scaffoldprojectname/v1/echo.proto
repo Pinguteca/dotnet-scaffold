@@ -1,0 +1,27 @@
+// Echo service. Placeholder to verify the gRPC + Connect pipeline end to end.
+// Replace with real RPCs as the API evolves.
+
+syntax = "proto3";
+
+package scaffoldprojectname.v1;
+
+option csharp_namespace = "ScaffoldProjectName.V1";
+option go_package = "github.com/ScaffoldOwner/ScaffoldTemplate/gen/proto/scaffoldprojectname/v1;scaffoldprojectnamev1";
+option java_multiple_files = true;
+option java_package = "com.ScaffoldOwner.scaffoldprojectname.v1";
+
+// EchoService returns the message it receives. Useful as a smoke test.
+service EchoService {
+  // Echo returns the request message verbatim.
+  rpc Echo(EchoRequest) returns (EchoResponse);
+}
+
+message EchoRequest {
+  // Free-form message to echo back to the caller.
+  string message = 1;
+}
+
+message EchoResponse {
+  // The message received from the caller.
+  string message = 1;
+}

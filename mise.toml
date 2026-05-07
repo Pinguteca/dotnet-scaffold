@@ -83,6 +83,31 @@ run = "fnox list"
 alias = "ss-ls"
 description = "List all resolved secrets for the current profile"
 
+[tasks."proto:lint"]
+run = "buf lint"
+alias = "pl"
+description = "Lint proto files with buf"
+
+[tasks."proto:format"]
+run = "buf format --write"
+alias = "pf"
+description = "Format proto files in place"
+
+[tasks."proto:format-check"]
+run = "buf format --diff --exit-code"
+alias = "pfc"
+description = "Check proto formatting without modifying files"
+
+[tasks."proto:breaking"]
+run = "buf breaking --against .git#branch=main"
+alias = "pb"
+description = "Detect breaking proto changes vs main branch"
+
+[tasks."proto:generate"]
+run = "buf generate"
+alias = "pg"
+description = "Generate code from proto files via buf.gen.yaml"
+
 [tools]
 "github:mongodb/kingfisher" = "1.98.0"
 "github:oasdiff/oasdiff" = "1.15.0"
@@ -96,6 +121,7 @@ spectral = "6.15.0"
 pnpm = "11.0.2"
 dotnet = "10.0.203"
 node = "25.9.0"
+buf = "1.69.0"
 
 [plugins]
 fnox-env = "https://github.com/jdx/mise-env-fnox"

@@ -28,6 +28,22 @@ run = "dotnet build ScaffoldProjectName.slnx --configuration Release --no-restor
 description = "Build solution in Release configuration without restoring"
 
 
+[tasks."ci:proto:lint"]
+run = "buf lint --error-format github-actions"
+description = "Lint proto files with GitHub Actions annotations"
+
+[tasks."ci:proto:format-check"]
+run = "buf format --diff --exit-code"
+description = "Verify proto formatting (CI)"
+
+[tasks."ci:proto:breaking"]
+run = "buf breaking --against .git#branch=main --error-format github-actions"
+description = "Detect breaking proto changes vs main with GHA annotations"
+
+[tasks."ci:proto:generate"]
+run = "buf generate"
+description = "Generate code from proto in CI"
+
 [tasks."ci:sdk:gen:all"]
 depends = ["openapi:generate"]
 run = "mise run sdk:generate -- all"
