@@ -4,8 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
-    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/../../out/openapi</OpenApiDocumentsDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,12 +11,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Scalar.AspNetCore" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <!-- gRPC server stack with HTTP/JSON via gRPC-Web (Connect protocol bridge) -->
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Grpc.AspNetCore.Web" />
+    <PackageReference Include="Grpc.AspNetCore.HealthChecks" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" />
+
+    <!-- Schema-driven request validation (protovalidate) -->
+    <PackageReference Include="ProtoValidate" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Compile proto files from the workspace root /proto directory.
+         Grpc.Tools generates server stubs only; client SDKs come from buf generate. -->
+    <Protobuf Include="..\..\proto\**\*.proto"
+              GrpcServices="Server"
+              ProtoRoot="..\..\proto" />
   </ItemGroup>
 
 </Project>

@@ -1,29 +1,36 @@
-using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using ScaffoldProjectName.ApiService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddProblemDetails();
+builder.Services.AddGrpc();
+builder.Services.AddGrpcHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
 
-builder.Services.AddOpenApi();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddGrpcReflection();
+}
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
+// Connect-Web bridge so browser and Connect clients can speak HTTP/1.1 + JSON to the gRPC server.
+app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
+
+app.MapGrpcService<EchoService>();
+app.MapGrpcHealthChecksService();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference(options =>
-    {
-        options.WithTitle("ScaffoldProjectName API");
-        options.WithTheme(ScalarTheme.BluePlanet);
-    });
+    app.MapGrpcReflectionService();
 }
 
-app.MapGet("/", () => "API service is running.");
-
+// Kubernetes liveness vs readiness probe endpoints (split is configured in ServiceDefaults).
 app.MapDefaultEndpoints();
 
 app.Run();
