@@ -17,8 +17,13 @@
     <PackageReference Include="Grpc.AspNetCore.HealthChecks" />
     <PackageReference Include="Grpc.AspNetCore.Server.Reflection" />
 
-    <!-- Schema-driven request validation (protovalidate) -->
-    <PackageReference Include="ProtoValidate" />
+    <!-- Typed gRPC/Connect error details: google.rpc.Status with Any-packed details -->
+    <PackageReference Include="Google.Api.CommonProtos" />
+    <PackageReference Include="Grpc.StatusProto" />
+
+    <!-- Server-side request validation. See project_validation_strategy memory for the buf.validate trade-off. -->
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
   </ItemGroup>
 
   <ItemGroup>

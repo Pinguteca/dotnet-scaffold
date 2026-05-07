@@ -1,14 +1,21 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using ScaffoldProjectName.ApiService.Interceptors;
 using ScaffoldProjectName.ApiService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddGrpc();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
+
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<ValidationInterceptor>();
+});
 builder.Services.AddGrpcHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
 

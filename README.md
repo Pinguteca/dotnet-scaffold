@@ -165,6 +165,30 @@ curl -X POST http://localhost:5301/scaffoldprojectname.v1.EchoService/Echo \
 
 Reflection is disabled in non-Development environments to reduce attack surface and avoid runtime cost.
 
+### Request validation and typed errors
+
+Server-side validation runs through a gRPC interceptor (`Interceptors/ValidationInterceptor.cs`) that resolves a [FluentValidation](https://fluentvalidation.net/) `IValidator<TRequest>` from DI for every incoming request type. Failures are mapped to `INVALID_ARGUMENT` with a `google.rpc.BadRequest` detail listing every field violation, so Connect/gRPC clients in any language receive structured per-field errors.
+
+Add a validator per request type under `Validation/`:
+
+```csharp
+public sealed class CreateThingRequestValidator : AbstractValidator<CreateThingRequest>
+{
+    public CreateThingRequestValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(128);
+    }
+}
+```
+
+For non-validation errors, use the `RpcExceptions` helpers (`Errors/RpcExceptions.cs`). They emit `google.rpc.Status` carrying the standard detail type for each error class (`ResourceInfo`, `ErrorInfo`, `PreconditionFailure`, `QuotaFailure`, `RetryInfo`):
+
+```csharp
+throw RpcExceptions.NotFound("thing", id);
+throw RpcExceptions.PermissionDenied(reason: "missing_scope", domain: "scaffoldprojectname");
+throw RpcExceptions.ResourceExhausted(violations, retryAfter: TimeSpan.FromSeconds(30));
+```
+
 ## Health and Graceful Shutdown
 
 The service exposes Kubernetes-friendly probe endpoints:
