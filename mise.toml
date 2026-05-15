@@ -53,12 +53,12 @@ alias = "rsbom"
 description = "Generate SBOM in CycloneDX format"
 
 [tasks."secret:scan"]
-run = "kingfisher scan . --format json --output kingfisher-results.json"
+run = "kingfisher scan . --no-validate --redact --format json --output kingfisher-results.json"
 alias = "ss"
 description = "Scan for secrets in codebase"
 
 [tasks."secret:validate"]
-run = "kingfisher scan . --validate --validation-rps 2"
+run = "kingfisher scan . --redact --validation-rps 2"
 alias = "sv"
 description = "Scan and validate live secrets for revocation"
 
