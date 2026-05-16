@@ -16,8 +16,12 @@ builder.Services.AddGrpc(options =>
 {
     options.Interceptors.Add<ValidationInterceptor>();
 });
-builder.Services.AddGrpcHealthChecks()
-    .AddCheck("self", () => HealthCheckResult.Healthy(), tags: ["live"]);
+// ServiceDefaults.AddDefaultHealthChecks already registers a "self"
+// liveness check and a readiness check against the shared
+// IHealthChecksBuilder. AddGrpcHealthChecks exposes those over the
+// grpc.health.v1.Health service; piling another "self" check on
+// here would collide on the registry name.
+builder.Services.AddGrpcHealthChecks();
 
 if (builder.Environment.IsDevelopment())
 {
