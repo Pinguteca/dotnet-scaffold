@@ -1,0 +1,35 @@
+info:
+  name: Token (client_credentials)
+  type: http
+  seq: 1
+  tags:
+    - auth
+
+http:
+  method: POST
+  url: "{{idp_url}}/token"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: form-urlencoded
+    data:
+      - name: grant_type
+        value: client_credentials
+      - name: client_id
+        value: "{{idp_client_id}}"
+      - name: client_secret
+        value: "{{idp_client_secret}}"
+  auth:
+    type: none
+
+settings:
+  encodeUrl: true
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.access_token
+      operator: isString

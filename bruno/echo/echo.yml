@@ -1,0 +1,16 @@
+info:
+  name: Echo
+  type: grpc
+  seq: 1
+  tags:
+    - smoke
+
+grpc:
+  url: "{{api_url}}"
+  method: /scaffoldprojectname.v1.EchoService/Echo
+  methodType: unary
+  message: |-
+    {
+      "message": "Hello World!"
+    }
+  auth: inherit

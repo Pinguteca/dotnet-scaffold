@@ -1,0 +1,29 @@
+opencollection: 1.0.0
+
+info:
+  name: ScaffoldProjectName
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+docs:
+  content: |-
+    # ScaffoldProjectName request collection
+
+    Seed OpenCollection for the scaffold's services. Import this folder
+    into Bruno; every request is plain YAML so git diff stays readable
+    and the team shares a single source of truth for example calls.
+
+    Environments live under `environments/`; the default `local`
+    resolves against the AppHost (and the dev FakeIdp when wired).
+  type: text/markdown
+bundled: false
+extensions: {}

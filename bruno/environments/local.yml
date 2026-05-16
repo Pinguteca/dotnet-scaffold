@@ -1,0 +1,13 @@
+info:
+  name: local
+  type: environment
+
+variables:
+  - name: api_url
+    value: https://localhost:7301
+  - name: idp_url
+    value: https://localhost:5050
+  - name: idp_client_id
+    value: sample-client
+  - name: idp_client_secret
+    value: fake-secret
