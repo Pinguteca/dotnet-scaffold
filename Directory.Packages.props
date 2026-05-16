@@ -17,6 +17,13 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
 
+    <!-- gRPC client stack (sample client and any other consumer projects) -->
+    <PackageVersion Include="Grpc.Net.Client" Version="2.80.0" />
+
+    <!-- Pinguteca SDK client (interceptors: errors, retry, timeout, auth, otel,
+         idempotency, breaker, plus the Standalone/Mesh presets) -->
+    <PackageVersion Include="Pinguteca.Sdk.Core" Version="0.2.1" />
+
     <!-- gRPC server stack -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.80.0" />
     <PackageVersion Include="Grpc.AspNetCore.Web" Version="2.80.0" />

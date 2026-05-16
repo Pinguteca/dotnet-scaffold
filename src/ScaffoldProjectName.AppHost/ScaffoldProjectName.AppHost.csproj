@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ScaffoldProjectName.ApiService\ScaffoldProjectName.ApiService.csproj" />
+    <ProjectReference Include="..\ScaffoldProjectName.SampleClient\ScaffoldProjectName.SampleClient.csproj" />
   </ItemGroup>
 
 </Project>
