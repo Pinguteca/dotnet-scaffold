@@ -23,6 +23,7 @@
         "**/obj/**",
         ".template.config/**",
         "docs/**",
+        "dev/**",
         "**/*.user"
       ],
       "modifiers": [

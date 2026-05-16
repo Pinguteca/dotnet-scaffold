@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Scaffold-internal smoke tooling. Excluded from the template
+         output via .template.config/template.json; consumers point
+         the SDK at their real IdP via the Sdk:Idp* configuration. -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>
