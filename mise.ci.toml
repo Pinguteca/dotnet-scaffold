@@ -22,10 +22,29 @@ description = "Optimize Git config for CI (disable compression, fsync)"
 [tasks."ci:restore"]
 run = "dotnet restore ScaffoldProjectName.slnx --locked-mode"
 description = "Restore NuGet packages in locked mode (verifies lockfiles match)"
+sources = [
+    "src/**/*.csproj",
+    "src/**/packages.lock.json",
+    "ScaffoldProjectName.slnx",
+    "Directory.Packages.props",
+    "global.json",
+    "nuget.config",
+]
+outputs = ["src/**/obj/project.assets.json"]
 
 [tasks."ci:build"]
 run = "dotnet build ScaffoldProjectName.slnx --configuration Release --no-restore"
 description = "Build solution in Release configuration without restoring"
+sources = [
+    "src/**/*.cs",
+    "src/**/*.csproj",
+    "ScaffoldProjectName.slnx",
+    "Directory.Build.props",
+    "Directory.Build.targets",
+    "Directory.Packages.props",
+    "global.json",
+]
+outputs = ["src/**/bin/Release/**/*"]
 
 
 [tasks."ci:proto:lint"]
@@ -43,3 +62,5 @@ description = "Detect breaking proto changes vs main with GHA annotations"
 [tasks."ci:proto:generate"]
 run = "buf generate"
 description = "Generate code from proto in CI"
+sources = ["proto/**/*.proto", "buf.yaml", "buf.gen.yaml"]
+outputs = ["out/sdk/**/*"]

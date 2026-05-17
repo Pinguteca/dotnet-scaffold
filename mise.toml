@@ -21,6 +21,16 @@ alias = "apd"
 run = "dotnet build ScaffoldProjectName.slnx"
 alias = "b"
 description = "Build all projects"
+sources = [
+    "src/**/*.cs",
+    "src/**/*.csproj",
+    "ScaffoldProjectName.slnx",
+    "Directory.Build.props",
+    "Directory.Build.targets",
+    "Directory.Packages.props",
+    "global.json",
+]
+outputs = ["src/**/bin/**/*", "src/**/obj/**/*"]
 
 [tasks.clean]
 run = "dotnet clean ScaffoldProjectName.slnx"
@@ -31,6 +41,15 @@ description = "Clean build artifacts"
 run = "dotnet restore ScaffoldProjectName.slnx"
 alias = "r"
 description = "Restore NuGet packages"
+sources = [
+    "src/**/*.csproj",
+    "src/**/packages.lock.json",
+    "ScaffoldProjectName.slnx",
+    "Directory.Packages.props",
+    "global.json",
+    "nuget.config",
+]
+outputs = ["src/**/obj/project.assets.json"]
 
 [tasks.format]
 run = "dotnet format ScaffoldProjectName.slnx"
@@ -51,6 +70,13 @@ description = "Start Aspire AppHost (local development)"
 run = "dotnet tool run CycloneDX ScaffoldProjectName.slnx -o out/sbom -f json"
 alias = "rsbom"
 description = "Generate SBOM in CycloneDX format"
+sources = [
+    "src/**/*.csproj",
+    "src/**/packages.lock.json",
+    "ScaffoldProjectName.slnx",
+    "Directory.Packages.props",
+]
+outputs = ["out/sbom/**/*"]
 
 [tasks."secret:scan"]
 run = "kingfisher scan . --no-validate --redact --format json --output kingfisher-results.json"
@@ -107,6 +133,8 @@ description = "Detect breaking proto changes vs main branch"
 run = "buf generate"
 alias = "pg"
 description = "Generate code from proto files via buf.gen.yaml"
+sources = ["proto/**/*.proto", "buf.yaml", "buf.gen.yaml"]
+outputs = ["out/sdk/**/*"]
 
 [tasks."loadtest:smoke"]
 run = "k6 run k6/smoke.js"

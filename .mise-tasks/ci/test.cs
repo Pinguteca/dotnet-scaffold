@@ -1,5 +1,7 @@
 #!/usr/bin/env dotnet
 //MISE description="Run tests in Release with TRX logger and XPlat coverage"
+//MISE sources=["src/**/*.cs", "tests/**/*.cs", "test/**/*.cs", "src/**/*.csproj", "tests/**/*.csproj", "test/**/*.csproj", "ScaffoldProjectName.slnx", "Directory.Build.props", "Directory.Build.targets", "Directory.Packages.props"]
+//MISE outputs=["tests/**/TestResults/**/*", "test/**/TestResults/**/*"]
 #:property PublishAot=false
 #:package CliWrap@*
 
