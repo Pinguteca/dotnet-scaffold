@@ -108,10 +108,26 @@ run = "buf generate"
 alias = "pg"
 description = "Generate code from proto files via buf.gen.yaml"
 
+[tasks."loadtest:smoke"]
+run = "k6 run k6/smoke.js"
+alias = "lts"
+description = "Run the one-shot k6 smoke test against /health/live"
+
+[tasks."loadtest:load"]
+run = "k6 run k6/echo.js"
+alias = "ltl"
+description = "Run the sustained k6 load profile against EchoService.Echo"
+
+[tasks."loadtest:stress"]
+run = "k6 run k6/stress.js"
+alias = "ltr"
+description = "Run the k6 stress ramp until the service saturates"
+
 [tools]
 "github:mongodb/kingfisher" = "1.98.0"
 "dotnet:aspire.cli" = "13.3.0"
 fnox = "1.23.0"
+k6 = "1.7.1"
 pinact = "3.9.2"
 rtk = "0.38.0"
 pnpm = "11.0.2"

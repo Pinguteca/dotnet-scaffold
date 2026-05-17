@@ -19,4 +19,17 @@ builder.AddProject<Projects.ScaffoldProjectName_SampleClient>("sampleclient")
     .WithEnvironment("Sdk__IdpClientId", "sample-client")
     .WithEnvironment("Sdk__IdpClientSecret", "fake-secret");
 
+// k6 against the dev apiservice. Scripts mounted from the repo's
+// /k6 directory so edits round-trip without rebuilding the image.
+var k6Scripts = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "k6"));
+var protoDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "proto"));
+
+builder.AddK6("k6")
+    .WithBindMount(k6Scripts, "/scripts", isReadOnly: true)
+    .WithBindMount(protoDir, "/proto", isReadOnly: true)
+    .WithScript("/scripts/echo.js")
+    .WithReference(apiService)
+    .WaitFor(apiService)
+    .WithEnvironment("API_URL", apiService.GetEndpoint("https"));
+
 builder.Build().Run();

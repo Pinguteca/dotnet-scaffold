@@ -17,4 +17,8 @@
     <ProjectReference Include="..\..\src\ScaffoldProjectName.SampleClient\ScaffoldProjectName.SampleClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.k6" />
+  </ItemGroup>
+
 </Project>

@@ -24,6 +24,11 @@
          idempotency, breaker, plus the Standalone/Mesh presets) -->
     <PackageVersion Include="Pinguteca.Sdk.Core" Version="0.2.1" />
 
+    <!-- Aspire community-toolkit k6 hosting integration. Adds k6 as a
+         containerised resource so the AppHost can orchestrate load
+         tests alongside the API, with OTel feeding the dashboard. -->
+    <PackageVersion Include="CommunityToolkit.Aspire.Hosting.k6" Version="13.3.0" />
+
     <!-- gRPC server stack -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.80.0" />
     <PackageVersion Include="Grpc.AspNetCore.Web" Version="2.80.0" />
