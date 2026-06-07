@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "generated": "2026-06-07T23:03:30.044Z",
+  "actions": {
+    "step-security/harden-runner": [
+      {
+        "version": "9af89fc71515a100421586dfdb3dc9c984fbf411",
+        "sha": "9af89fc71515a100421586dfdb3dc9c984fbf411",
+        "integrity": "sha256-cbd562adf1c42a78faafbba39a5a57b22f235d72ff04cad153c2b3ee526156c7",
+        "dependencies": []
+      }
+    ],
+    "actions/checkout": [
+      {
+        "version": "de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+        "sha": "de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+        "integrity": "sha256-c744527bfafdf73cf1bf8a83a3ace81c46e36d03e6ed952fa9d93683adabab4d",
+        "dependencies": []
+      }
+    ],
+    "jdx/mise-action": [
+      {
+        "version": "1648a7812b9aeae629881980618f079932869151",
+        "sha": "1648a7812b9aeae629881980618f079932869151",
+        "integrity": "sha256-f7881c16860c9bafdc12ee70b13c50e9ae9e82f8e8f68dd38a93aa8764614417",
+        "dependencies": []
+      }
+    ],
+    "actions/upload-artifact": [
+      {
+        "version": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "sha": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+        "integrity": "sha256-69baddda1bd8d80441109e489128f1b6944fddd92586ad1855275121beeae897",
+        "dependencies": []
+      }
+    ],
+    "chainguard-dev/actions/setup-gitsign": [
+      {
+        "version": "c69a264ec2a5934c3186c618f368fc1c86f16cff",
+        "sha": "c69a264ec2a5934c3186c618f368fc1c86f16cff",
+        "integrity": "sha256-f52bb8ba102bd6751aab1bb034b1792c2cf84770650f8dd24be10fe277383c57",
+        "dependencies": []
+      }
+    ],
+    "calibreapp/image-actions": [
+      {
+        "version": "9d037c06280028c110ff61c433ad4dc7d33c3c43",
+        "sha": "9d037c06280028c110ff61c433ad4dc7d33c3c43",
+        "integrity": "sha256-c03a1fb8316eb1bd2f2c4c01caf568ddb829cbb92c77df0fc2ec2b66667522a8",
+        "dependencies": []
+      }
+    ],
+    "github/codeql-action/upload-sarif": [
+      {
+        "version": "e46ed2cbd01164d986452f91f178727624ae40d7",
+        "sha": "e46ed2cbd01164d986452f91f178727624ae40d7",
+        "integrity": "sha256-4f1049d4ea6d30d3ca787dcd333bbd61abb1c68e14b69e1f672375f67c578c10",
+        "dependencies": []
+      },
+      {
+        "version": "7211b7c8077ea37d8641b6271f6a365a22a5fbfa",
+        "sha": "7211b7c8077ea37d8641b6271f6a365a22a5fbfa",
+        "integrity": "sha256-065d719fd988e64861debc4c94bc6a03c24211cae6026a0837a0d190f5352f44",
+        "dependencies": []
+      }
+    ],
+    "zizmorcore/zizmor-action": [
+      {
+        "version": "5f14fd08f7cf1cb1609c1e344975f152c7ee938d",
+        "sha": "5f14fd08f7cf1cb1609c1e344975f152c7ee938d",
+        "integrity": "sha256-5fdf5ac8c5167cb763b45828e84fc14ce588bf2e66080e25bd62178eb3e893a5",
+        "dependencies": [
+          {
+            "ref": "github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7",
+            "sha": "e46ed2cbd01164d986452f91f178727624ae40d7",
+            "integrity": "sha256-4f1049d4ea6d30d3ca787dcd333bbd61abb1c68e14b69e1f672375f67c578c10"
+          }
+        ]
+      }
+    ],
+    "reviewdog/action-actionlint": [
+      {
+        "version": "6fb7acc99f4a1008869fa8a0f09cfca740837d9d",
+        "sha": "6fb7acc99f4a1008869fa8a0f09cfca740837d9d",
+        "integrity": "sha256-e2b56c1a54504af6569f579541b90a187d8e9cb074bb273fae640c74fb7f5c1e",
+        "dependencies": []
+      }
+    ],
+    "ossf/scorecard-action": [
+      {
+        "version": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a",
+        "sha": "4eaacf0543bb3f2c246792bd56e8cdeffafb205a",
+        "integrity": "sha256-272458b277268dff201d4e5bb8d7bfcba6376ee2a166c324f8a7ce3f21dcec78",
+        "dependencies": []
+      }
+    ],
+    "dorny/paths-filter": [
+      {
+        "version": "fbd0ab8f3e69293af611ebaee6363fc25e6d187d",
+        "sha": "fbd0ab8f3e69293af611ebaee6363fc25e6d187d",
+        "integrity": "sha256-38c2ff88df99f0e28cc1fd0a457e5cf7a0536bf477c5f4777c1145e822ef1d05",
+        "dependencies": []
+      }
+    ],
+    "pnpm/action-setup": [
+      {
+        "version": "0e279bb959325dab635dd2c09392533439d90093",
+        "sha": "0e279bb959325dab635dd2c09392533439d90093",
+        "integrity": "sha256-943eb67dd203000ea7577e159a4fa06a8664c8c41fec5a2ad252d1c0768d9a3e",
+        "dependencies": []
+      }
+    ],
+    "actions/setup-node": [
+      {
+        "version": "48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e",
+        "sha": "48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e",
+        "integrity": "sha256-aefc631800117b35e99f36c1395c361a2a6c6ae364ff47a3ba48c684cd3d3aff",
+        "dependencies": []
+      }
+    ],
+    "stefanzweifel/git-auto-commit-action": [
+      {
+        "version": "04702edda442b2e678b25b537cec683a1493fcb9",
+        "sha": "04702edda442b2e678b25b537cec683a1493fcb9",
+        "integrity": "sha256-fb727ccb3f59ccc9d4fc5e0de90e1238ad8b9ff2f48e4b100e47ed99c229c509",
+        "dependencies": []
+      }
+    ],
+    "gjtorikian/gh-actions-lockfile": [
+      {
+        "version": "8abbeb1fe0a4bf20279c81fa206e6a2fc862a830",
+        "sha": "8abbeb1fe0a4bf20279c81fa206e6a2fc862a830",
+        "integrity": "sha256-433ba4e791b1c1fe3431e0f0c8766cb1c3823dd7ae8739cb2b9c07c0b023f87f",
+        "dependencies": []
+      }
+    ]
+  }
+}
