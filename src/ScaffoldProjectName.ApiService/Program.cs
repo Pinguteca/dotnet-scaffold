@@ -1,4 +1,5 @@
 using FluentValidation;
+using ProtoValidate;
 using ScaffoldProjectName.ApiService.Interceptors;
 using ScaffoldProjectName.ApiService.Services;
 
@@ -6,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+// ProtoValidate evaluates buf.validate annotations on every incoming
+// proto message (ADR 0002). DisableLazy=false so unknown message types
+// fall back to descriptor discovery instead of throwing.
+builder.Services.AddProtoValidate();
+
+// FluentValidation covers semantic rules outside CEL's reach (see ADR 0002).
 builder.Services.AddValidatorsFromAssemblyContaining<Program>(includeInternalTypes: true);
 
 builder.Services.AddGrpc(options =>
