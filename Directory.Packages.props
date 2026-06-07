@@ -41,7 +41,11 @@
     <PackageVersion Include="Google.Api.CommonProtos" Version="2.17.0" />
     <PackageVersion Include="Grpc.StatusProto" Version="2.80.0" />
 
-    <!-- Server-side request validation (FluentValidation; see project_validation_strategy memory) -->
+    <!-- Server-side request validation. ProtoValidate evaluates buf.validate
+         annotations from the .proto schema (ADR 0002). FluentValidation
+         is retained only for semantic rules that cannot be expressed in
+         CEL (cross-aggregate invariants, stateful preconditions). -->
+    <PackageVersion Include="ProtoValidate" Version="1.0.0" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>

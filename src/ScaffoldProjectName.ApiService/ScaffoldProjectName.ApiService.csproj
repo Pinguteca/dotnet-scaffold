@@ -21,7 +21,10 @@
     <PackageReference Include="Google.Api.CommonProtos" />
     <PackageReference Include="Grpc.StatusProto" />
 
-    <!-- Server-side request validation. See project_validation_strategy memory for the buf.validate trade-off. -->
+    <!-- Server-side request validation. ProtoValidate runs first against
+         .proto buf.validate annotations (the cross-language contract);
+         FluentValidation runs after for semantic rules outside CEL. -->
+    <PackageReference Include="ProtoValidate" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
   </ItemGroup>
