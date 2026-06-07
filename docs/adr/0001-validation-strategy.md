@@ -1,7 +1,7 @@
 # 1. Server-side validation uses FluentValidation, not `buf.validate`
 
 Date: 2026-05-08
-Status: Accepted
+Status: Superseded by [ADR 0002](0002-adopt-protovalidate-net.md) on 2026-06-08
 
 ## Context
 
