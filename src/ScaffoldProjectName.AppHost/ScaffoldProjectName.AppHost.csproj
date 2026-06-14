@@ -6,6 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>00000000-0000-0000-0000-000000000001</UserSecretsId>
+    <!--
+      Aspire.Hosting.AppHost pulls a per RID Aspire.Dashboard.Sdk
+      package. Listing every OS the team and CI run on lets the
+      lockfile carry all RID variants and stay valid under locked
+      mode restore regardless of where restore last ran.
+    -->
+    <RuntimeIdentifiers>linux-x64;win-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
