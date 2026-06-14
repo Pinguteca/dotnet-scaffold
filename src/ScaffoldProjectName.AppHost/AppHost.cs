@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.GeneratedClassNamePrefix_ApiService>("apiservice")
+var apiService = builder.AddProject<Projects.ScaffoldProjectName_ApiService>("apiservice")
     .WithHttpHealthCheck("/health/live");
 
 // SampleClient demonstrates how a consumer wires the Pinguteca SDK
@@ -8,7 +8,7 @@ var apiService = builder.AddProject<Projects.GeneratedClassNamePrefix_ApiService
 // via configuration (env, user secrets, secret manager); plug your
 // real IdP in by setting Sdk__IdpTokenUrl, Sdk__IdpClientId, and
 // Sdk__IdpClientSecret at deploy time.
-builder.AddProject<Projects.GeneratedClassNamePrefix_SampleClient>("sampleclient")
+builder.AddProject<Projects.ScaffoldProjectName_SampleClient>("sampleclient")
     .WithReference(apiService)
     .WaitFor(apiService)
     .WithEnvironment("Sdk__ApiUrl", apiService.GetEndpoint("https"));
@@ -23,7 +23,10 @@ builder.AddProject<Projects.GeneratedClassNamePrefix_SampleClient>("sampleclient
 // Off by default so a fresh consumer who has not configured their
 // container runtime can still run the AppHost. Run loadtests
 // standalone via `mise run loadtest:load` either way.
-if (builder.Configuration.GetValue<bool>("EnableK6"))
+// Indexer-style read keeps the dependency surface to
+// Microsoft.Extensions.Configuration only; avoids needing the
+// Configuration.Binder extension surface that GetValue<T> uses.
+if (bool.TryParse(builder.Configuration["EnableK6"], out var enableK6) && enableK6)
 {
     var k6Scripts = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "k6"));
     var protoDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "proto"));

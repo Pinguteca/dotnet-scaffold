@@ -75,4 +75,19 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode Condition="'$(CI)' == 'true'">true</RestoreLockedMode>
   </PropertyGroup>
+
+  <!-- ============================================= -->
+  <!-- NuGet Audit Suppressions                      -->
+  <!-- ============================================= -->
+  <!-- Suppress advisories with no fixed version available on packages
+       we cannot drop. Revisit on every dependency bump: if a patched
+       release appears, remove the entry. -->
+  <ItemGroup>
+    <!-- Microsoft.Build.Utilities.Core: transitive via Grpc.Tools.
+         MSBuild-time tooling, not runtime; nil attack surface. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-w3q9-fxm7-j8fq" />
+    <!-- MessagePack 2.x: transitive via Aspire's dashboard. No patched
+         version floated through Aspire's pinned graph yet. -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-hv8m-jj95-wg3x" />
+  </ItemGroup>
 </Project>
