@@ -55,10 +55,6 @@ description = "Lint proto files with GitHub Actions annotations"
 run = "buf format --diff --exit-code"
 description = "Verify proto formatting (CI)"
 
-[tasks."ci:proto:breaking"]
-run = "buf breaking --against .git#branch=main --error-format github-actions"
-description = "Detect breaking proto changes vs main with GHA annotations"
-
 [tasks."ci:proto:generate"]
 run = "buf generate"
 description = "Generate code from proto in CI"

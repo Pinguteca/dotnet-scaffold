@@ -52,12 +52,15 @@ sources = [
 outputs = ["src/**/obj/project.assets.json"]
 
 [tasks.format]
-run = "dotnet format ScaffoldProjectName.slnx"
+# AppHost is omitted because its csproj uses Aspire.AppHost.Sdk on
+# the Project attribute, which Roslyn's MSBuildWorkspace cannot load.
+# Listing the other projects directly avoids the slnx loader.
+run = "dotnet format src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj && dotnet format src/ScaffoldProjectName.SampleClient/ScaffoldProjectName.SampleClient.csproj && dotnet format src/ScaffoldProjectName.ServiceDefaults/ScaffoldProjectName.ServiceDefaults.csproj"
 alias = "fmt"
 description = "Format code using .editorconfig rules"
 
 [tasks."format:check"]
-run = "dotnet format ScaffoldProjectName.slnx --verify-no-changes"
+run = "dotnet format src/ScaffoldProjectName.ApiService/ScaffoldProjectName.ApiService.csproj --verify-no-changes && dotnet format src/ScaffoldProjectName.SampleClient/ScaffoldProjectName.SampleClient.csproj --verify-no-changes && dotnet format src/ScaffoldProjectName.ServiceDefaults/ScaffoldProjectName.ServiceDefaults.csproj --verify-no-changes"
 alias = "fmtc"
 description = "Check code formatting without changes"
 
@@ -123,11 +126,6 @@ description = "Format proto files in place"
 run = "buf format --diff --exit-code"
 alias = "pfc"
 description = "Check proto formatting without modifying files"
-
-[tasks."proto:breaking"]
-run = "buf breaking --against .git#branch=main"
-alias = "pb"
-description = "Detect breaking proto changes vs main branch"
 
 [tasks."proto:generate"]
 run = "buf generate"

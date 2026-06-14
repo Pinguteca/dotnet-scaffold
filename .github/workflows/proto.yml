@@ -55,7 +55,7 @@ jobs:
 
       - name: Verify proto formatting
         run: mise run ci:proto:format-check
-
-      - name: Detect breaking changes
-        if: github.event_name == 'pull_request'
-        run: mise run ci:proto:breaking
+      # Breaking-change detection deliberately omitted: this is a
+      # scaffold (template), so there is no published proto contract
+      # to break against. Consumers re-enable `buf breaking` once
+      # they have a stable schema downstream.
