@@ -1,12 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <!--
-    Aspire.AppHost.Sdk imported as a child Sdk element rather than
-    on the Project attribute. Roslyn's MSBuildWorkspace (used by
-    dotnet format) fails to parse the attribute form for custom
-    SDKs; the child-element form loads cleanly.
-  -->
-  <Sdk Name="Aspire.AppHost.Sdk" Version="13.2.2" />
+<Project Sdk="Aspire.AppHost.Sdk/13.2.2">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
