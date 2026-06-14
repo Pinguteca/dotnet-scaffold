@@ -3,7 +3,6 @@ using Google.Protobuf;
 using Google.Rpc;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-using ProtoValidate;
 using ScaffoldProjectName.ApiService.Errors;
 
 namespace ScaffoldProjectName.ApiService.Interceptors;
