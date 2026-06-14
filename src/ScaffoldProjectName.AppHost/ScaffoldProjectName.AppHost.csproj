@@ -6,6 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>00000000-0000-0000-0000-000000000001</UserSecretsId>
+    <!--
+      Aspire.Hosting.AppHost pulls a per RID Aspire.Dashboard.Sdk
+      package and the .NET SDK does not produce multi RID lockfiles.
+      Opt this dev-only orchestration project out of the lockfile so
+      CI does not fight the Windows vs Linux restore mismatch.
+    -->
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>

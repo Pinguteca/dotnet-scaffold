@@ -9,7 +9,7 @@ version: v2
 modules:
   - path: proto
 #if (hasBsrModule)
-    name: ScaffoldBsrModule
+    name: buf.build/ScaffoldOwner/ScaffoldProjectName
 #endif
 
 lint:
