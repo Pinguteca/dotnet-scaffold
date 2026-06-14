@@ -125,7 +125,10 @@ alias = "pfc"
 description = "Check proto formatting without modifying files"
 
 [tasks."proto:breaking"]
-run = "buf breaking --against .git#branch=main"
+# CI's actions/checkout (even with fetch-depth: 0) fetches history
+# but not other-branch refs. Materialise main locally if missing
+# before buf reads .git#branch=main.
+run = "git show-ref --verify --quiet refs/heads/main || git fetch origin main:main --no-tags --depth=1 ; buf breaking --against .git#branch=main"
 alias = "pb"
 description = "Detect breaking proto changes vs main branch"
 
