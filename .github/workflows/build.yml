@@ -62,22 +62,8 @@ jobs:
 
       - name: Build (Release)
         run: mise run ci:build
-
-      - name: Test
-        run: mise run ci:test
-
-      - name: Upload test results
-        if: always() && hashFiles('**/test-results.trx') != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: test-results
-          path: "**/test-results.trx"
-          retention-days: 30
-
-      - name: Upload coverage
-        if: always() && hashFiles('**/coverage.cobertura.xml') != ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: coverage
-          path: "**/coverage.cobertura.xml"
-          retention-days: 30
+      # Test step intentionally absent: this is a scaffold (template),
+      # so it ships no test projects of its own. Consumers add their
+      # own test projects after running `dotnet new` and wire the
+      # equivalent step then. Re-add Test + Upload steps as the scaffold
+      # itself grows mocked-behaviour tests.
