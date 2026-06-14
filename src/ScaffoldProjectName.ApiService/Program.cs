@@ -1,8 +1,4 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
 using ScaffoldProjectName.ApiService.Interceptors;
 using ScaffoldProjectName.ApiService.Services;
 
