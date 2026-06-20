@@ -52,7 +52,7 @@
     <!-- Scalar API reference. Renders the buf-generated OpenAPI YAML
          (in wwwroot/openapi/) at /docs for human exploration. UI only;
          the OpenAPI document itself is produced upstream by buf. -->
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.4.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.4" />
   </ItemGroup>
 
 </Project>
