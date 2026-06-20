@@ -60,10 +60,15 @@ plugins:
     out: out/sdk/python/grpc
 
   # ---------------- Rust (gRPC via tonic) ----------------
+  # neoeinstein-tonic emits files that include!() prost's output, so
+  # both plugins must share an out directory or tonic fails with
+  # "scaffoldprojectname.v1.rs: file does not exist".
   - remote: buf.build/community/neoeinstein-prost
-    out: out/sdk/rust/proto
+    out: out/sdk/rust
   - remote: buf.build/community/neoeinstein-tonic
-    out: out/sdk/rust/grpc
+    out: out/sdk/rust
+    opt:
+      - no_include
 
   # ---------------- Dart (gRPC) ----------------
   - remote: buf.build/protocolbuffers/dart
