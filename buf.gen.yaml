@@ -73,3 +73,14 @@ plugins:
   # ---------------- Dart (gRPC) ----------------
   - remote: buf.build/protocolbuffers/dart
     out: out/sdk/dart
+
+  # ---------------- OpenAPI 3.x (Connect-shaped) ----------------
+  # Feeds Swagger UI hosted by the ApiService at /docs. Useful for
+  # consumers who only speak OpenAPI (frontend partners, API catalog
+  # tooling, openapi-generator-based SDKs). Connect/gRPC-native
+  # clients use the per-language outputs above directly.
+  # Output lands directly under the ApiService's wwwroot so the
+  # static-file middleware serves the YAML to Swagger UI without a
+  # separate copy step.
+  - remote: buf.build/community/sudorandom-connect-openapi:v0.25.7
+    out: src/ScaffoldProjectName.ApiService/wwwroot/openapi

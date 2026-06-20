@@ -1,5 +1,7 @@
 using FluentValidation;
+using Microsoft.AspNetCore.StaticFiles;
 using ProtoValidate;
+using Scalar.AspNetCore;
 using ScaffoldProjectName.ApiService.Interceptors;
 using ScaffoldProjectName.ApiService.Services;
 
@@ -32,6 +34,21 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
+
+// Serve the buf-generated OpenAPI YAML out of wwwroot. .yaml is not
+// a default static-file MIME type, so register it explicitly.
+var yamlProvider = new FileExtensionContentTypeProvider();
+yamlProvider.Mappings[".yaml"] = "application/yaml";
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = yamlProvider });
+
+// Scalar API reference at /docs, reading the buf-generated YAML from
+// wwwroot/openapi/. Regenerate via `mise run proto:generate` after
+// any .proto change.
+app.MapScalarApiReference("/docs", options =>
+{
+    options.WithTitle("ScaffoldProjectName API")
+           .WithOpenApiRoutePattern("/openapi/scaffoldprojectname/v1/echo.openapi.yaml");
+});
 
 // Connect-Web bridge so browser and Connect clients can speak HTTP/1.1 + JSON to the gRPC server.
 app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
