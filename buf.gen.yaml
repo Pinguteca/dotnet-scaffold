@@ -28,11 +28,9 @@ plugins:
       - paths=source_relative
 
   # ---------------- TypeScript / JavaScript (Connect-native) ----------------
+  # protoc-gen-es v2 also emits the service descriptors connect-es v2 uses;
+  # the separate connect-es plugin only exists for v1.
   - remote: buf.build/bufbuild/es
-    out: out/sdk/typescript
-    opt:
-      - target=ts
-  - remote: buf.build/connectrpc/es
     out: out/sdk/typescript
     opt:
       - target=ts
