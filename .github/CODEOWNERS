@@ -11,7 +11,7 @@
 /mise.ci.toml @ScaffoldOwner
 /jreleaser.yml @ScaffoldOwner
 /cog.toml @ScaffoldOwner
-/prek.toml @ScaffoldOwner
+/hk.pkl @ScaffoldOwner
 
 # License and security
 /LICENSE @ScaffoldOwner
