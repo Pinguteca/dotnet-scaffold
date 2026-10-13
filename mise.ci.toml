@@ -12,6 +12,10 @@ prefer_offline = true
 disable_default_registry = true
 disable_backends = ["asdf", "vfox", "ubi"]
 
+[env]
+# fnox `ci` profile: secrets come straight from the remote provider.
+_.fnox-env = { tools = true, profile = "ci" }
+
 [tasks."ci:git-config"]
 run = """
 git config --global core.compression 0

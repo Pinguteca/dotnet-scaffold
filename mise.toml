@@ -161,7 +161,7 @@ node = "25.9.0"
 buf = "1.69.0"
 
 [plugins]
+# Loads fnox secrets into the environment. Each mise environment enables it
+# with its own fnox profile (mise.dev.toml, mise.ci.toml): without an explicit
+# profile fnox always reads `default`.
 fnox-env = "https://github.com/jdx/mise-env-fnox"
-
-[env]
-_.fnox-env = { tools = true }

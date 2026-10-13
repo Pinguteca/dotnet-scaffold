@@ -5,6 +5,8 @@
 
 [env]
 HK_MISE = 1
+# fnox `dev` profile: secrets come from the OS keychain after `mise run secrets:sync`.
+_.fnox-env = { tools = true, profile = "dev" }
 
 [hooks]
 # Install/update the git hooks when tools are installed. Lives here (not in

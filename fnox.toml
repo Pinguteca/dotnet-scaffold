@@ -16,6 +16,10 @@
 #   fnox init                            # initialize config
 #   fnox sync --provider keychain        # cache remote secrets to OS keychain
 #   mise activate                        # secrets load as env vars automatically
+#
+# Profile selection: the fnox-env mise plugin passes the profile set in each
+# mise environment file (`dev` in mise.dev.toml, `ci` in mise.ci.toml). fnox
+# does not read MISE_ENV itself; outside those, set FNOX_PROFILE.
 
 # Stop parent directory search at this project boundary
 root = true
@@ -55,16 +59,16 @@ keychain = { type = "keychain", service = "ScaffoldProjectName" }
 # ASPNETCORE_ENVIRONMENT = { default = "Development" }
 
 # ============================================================================
-# Development profile - MISE_ENV=development (default for local work)
+# Dev profile - selected by mise.dev.toml (the default local environment)
 # Secrets come from OS Keychain after initial sync from remote provider.
 # ============================================================================
-[profiles.development.secrets]
+[profiles.dev.secrets]
 # Example: sync this from Azure once, then read from keychain forever
 # DATABASE_URL = { provider = "keychain", value = "dev/database-url", if_missing = "warn" }
 # API_KEY = { provider = "keychain", value = "dev/api-key", if_missing = "warn" }
 
 # ============================================================================
-# CI profile - MISE_ENV=ci
+# CI profile - selected by mise.ci.toml (MISE_ENV=ci)
 # Reads secrets directly from remote provider via workload identity / OIDC.
 # No keychain (no GUI session in CI runners).
 # ============================================================================
@@ -73,7 +77,7 @@ keychain = { type = "keychain", service = "ScaffoldProjectName" }
 # API_KEY = { provider = "azure", value = "ci-api-key", if_missing = "error" }
 
 # ============================================================================
-# Production profile - MISE_ENV=production
+# Production profile - FNOX_PROFILE=production in the deployed runtime
 # Always reads from remote provider at runtime, never cached locally.
 # ============================================================================
 [profiles.production.secrets]
