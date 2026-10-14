@@ -4,13 +4,17 @@ experimental = true
 env_cache = true
 env_cache_ttl = "9h"
 # Tools
-install_before = "7d"
-pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and install_before setting
+minimum_release_age = "7d"
+pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and minimum_release_age
 lockfile = true
 locked = false
 prefer_offline = true
 disable_default_registry = true
 disable_backends = ["asdf", "vfox", "ubi"]
+
+[env]
+# fnox `ci` profile: secrets come straight from the remote provider.
+_.fnox-env = { tools = true, profile = "ci" }
 
 [tasks."ci:git-config"]
 run = """

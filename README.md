@@ -11,7 +11,7 @@ ScaffoldDescription
 - **fnox** for 12-factor secrets (OS Keychain locally, remote provider in CI/prod)
 - **JReleaser** for multi-platform release automation (SBOM, Cosign, SLSA)
 - **Cocogitto** for conventional commits and semantic versioning
-- **prek** for pre-commit hooks (secret scanning via Kingfisher, lockfile validation, formatting)
+- **hk** for git hooks (secret scanning via Kingfisher, lockfile validation, formatting, workflow linting)
 - **Renovate** for automated dependency updates
 
 ## Project Structure
@@ -51,11 +51,9 @@ ScaffoldDescription
 ### Setup
 
 ```bash
-# Install all tools defined in mise.toml (including buf, dotnet, fnox, etc.)
+# Install all tools defined in mise.toml (including buf, dotnet, fnox, etc.).
+# In the default dev environment this also installs the hk git hooks.
 mise install
-
-# Install pre-commit hooks
-prek install
 
 # Restore packages (generates packages.lock.json)
 mise run restore

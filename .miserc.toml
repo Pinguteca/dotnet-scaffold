@@ -1,3 +1,4 @@
-# this means development (mise.toml) takes precedence
-# help daily development workflow
-env = ["development", "ci"]
+# Default mise environment for local work: `dev` layers the local-only tooling
+# (mise.dev.toml) onto mise.toml. CI replaces this with MISE_ENV=ci, which loads
+# mise.ci.toml instead, so the two never stack.
+env = ["dev"]

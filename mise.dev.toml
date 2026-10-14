@@ -1,0 +1,24 @@
+# Local development tooling, layered on top of mise.toml when the `dev` env is
+# active. .miserc.toml sets `env = ["dev"]`, so this loads by default for local
+# work but never in CI (CI sets MISE_ENV=ci). Everything here is hook, format, or
+# lint tooling the build and release never need.
+
+[env]
+HK_MISE = 1
+# fnox `dev` profile: secrets come from the OS keychain after `mise run secrets:sync`.
+_.fnox-env = { tools = true, profile = "dev" }
+
+[hooks]
+# Install/update the git hooks when tools are installed. Lives here (not in
+# mise.toml) so it does not run in CI, where hk is not installed.
+postinstall = "hk install --mise"
+
+[tools]
+hk = "2.5.0"
+pinact = "5.0.0"      # pin GitHub Actions to a SHA (hk pre-push)
+yamlfmt = "0.21.0"    # YAML formatter; also fails on YAML that does not parse
+jq = "1.8.2"          # JSON formatting (hk check-json)
+# Workflow linters for the hk pre-push hook. CI runs its own copies through the
+# zizmor and reviewdog actions in lint-gha, so these are local-only here.
+actionlint = "1.7.12"
+zizmor = "1.30.1"

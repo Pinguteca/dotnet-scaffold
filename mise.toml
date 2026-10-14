@@ -4,8 +4,8 @@ experimental = true
 env_cache = true
 env_cache_ttl = "9h"
 # Tools
-install_before = "7d"
-pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and install_before setting
+minimum_release_age = "7d"
+pin = true                      # not really needed when using lockfiles (helps Renovate), can remove this and stick with latest and minimum_release_age
 lockfile = true
 locked = false
 prefer_offline = true
@@ -150,11 +150,10 @@ alias = "ltr"
 description = "Run the k6 stress ramp until the service saturates"
 
 [tools]
-"github:mongodb/kingfisher" = "1.98.0"
+kingfisher = "1.98.0"
 "dotnet:aspire.cli" = "13.3.0"
 fnox = "1.23.0"
 k6 = "1.7.1"
-pinact = "3.9.2"
 rtk = "0.38.0"
 pnpm = "11.0.2"
 dotnet = "10.0.203"
@@ -162,7 +161,7 @@ node = "25.9.0"
 buf = "1.69.0"
 
 [plugins]
+# Loads fnox secrets into the environment. Each mise environment enables it
+# with its own fnox profile (mise.dev.toml, mise.ci.toml): without an explicit
+# profile fnox always reads `default`.
 fnox-env = "https://github.com/jdx/mise-env-fnox"
-
-[env]
-_.fnox-env = { tools = true }
