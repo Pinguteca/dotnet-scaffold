@@ -150,7 +150,7 @@ alias = "ltr"
 description = "Run the k6 stress ramp until the service saturates"
 
 [tools]
-"github:mongodb/kingfisher" = "1.98.0"
+kingfisher = "1.98.0"
 "dotnet:aspire.cli" = "13.3.0"
 fnox = "1.23.0"
 k6 = "1.7.1"
