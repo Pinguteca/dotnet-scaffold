@@ -55,4 +55,11 @@
     <PackageVersion Include="Scalar.AspNetCore" Version="2.16.4" />
   </ItemGroup>
 
+  <ItemGroup Label="Transitive overrides">
+    <!-- Aspire's hosting stack resolves MessagePack 2.5.192, which has published
+         advisories, and NuGet audit fails the restore on them. 2.5.307 is the
+         patched release on the same major the stack was built against. -->
+    <PackageVersion Include="MessagePack" Version="2.5.307" />
+  </ItemGroup>
+
 </Project>
