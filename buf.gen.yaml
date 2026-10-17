@@ -18,60 +18,62 @@ managed:
 
 plugins:
   # ---------------- Go (Connect-native) ----------------
-  - remote: buf.build/protocolbuffers/go
+  - remote: buf.build/protocolbuffers/go:v1.36.12
     out: out/sdk/go/proto
     opt:
       - paths=source_relative
-  - remote: buf.build/connectrpc/go
+  - remote: buf.build/connectrpc/go:v1.21.0
     out: out/sdk/go/connect
     opt:
       - paths=source_relative
 
   # ---------------- TypeScript / JavaScript (Connect-native) ----------------
-  - remote: buf.build/bufbuild/es
-    out: out/sdk/typescript
-    opt:
-      - target=ts
-  - remote: buf.build/connectrpc/es
+  # protoc-gen-es v2 also emits the service descriptors connect-es v2 uses;
+  # the separate connect-es plugin only exists for v1.
+  - remote: buf.build/bufbuild/es:v2.16.0
     out: out/sdk/typescript
     opt:
       - target=ts
 
   # ---------------- Kotlin (Connect-native) ----------------
-  - remote: buf.build/connectrpc/kotlin
+  - remote: buf.build/connectrpc/kotlin:v0.9.0
     out: out/sdk/kotlin
 
   # ---------------- .NET (gRPC, no Connect-native client yet) ----------------
-  - remote: buf.build/protocolbuffers/csharp
+  # Pinned to the runtime the service itself builds with, so the C# SDK needs
+  # nothing newer than what the service is tested against: csharp v34.1 pairs
+  # with Google.Protobuf 3.34.1 and grpc v1.80.0 is the generator Grpc.Tools
+  # 2.80.0 runs (Directory.Packages.props). Move them together.
+  - remote: buf.build/protocolbuffers/csharp:v34.1
     out: out/sdk/csharp/proto
-  - remote: buf.build/grpc/csharp
+  - remote: buf.build/grpc/csharp:v1.80.0
     out: out/sdk/csharp/grpc
 
   # ---------------- Java (gRPC) ----------------
-  - remote: buf.build/protocolbuffers/java
+  - remote: buf.build/protocolbuffers/java:v36.2
     out: out/sdk/java/proto
-  - remote: buf.build/grpc/java
+  - remote: buf.build/grpc/java:v1.84.0
     out: out/sdk/java/grpc
 
   # ---------------- Python (gRPC) ----------------
-  - remote: buf.build/protocolbuffers/python
+  - remote: buf.build/protocolbuffers/python:v36.2
     out: out/sdk/python/proto
-  - remote: buf.build/grpc/python
+  - remote: buf.build/grpc/python:v1.84.0
     out: out/sdk/python/grpc
 
   # ---------------- Rust (gRPC via tonic) ----------------
   # neoeinstein-tonic emits files that include!() prost's output, so
   # both plugins must share an out directory or tonic fails with
   # "scaffoldprojectname.v1.rs: file does not exist".
-  - remote: buf.build/community/neoeinstein-prost
+  - remote: buf.build/community/neoeinstein-prost:v0.5.0
     out: out/sdk/rust
-  - remote: buf.build/community/neoeinstein-tonic
+  - remote: buf.build/community/neoeinstein-tonic:v0.5.0
     out: out/sdk/rust
     opt:
       - no_include
 
   # ---------------- Dart (gRPC) ----------------
-  - remote: buf.build/protocolbuffers/dart
+  - remote: buf.build/protocolbuffers/dart:v25.1.0
     out: out/sdk/dart
 
   # ---------------- OpenAPI 3.x (Connect-shaped) ----------------
